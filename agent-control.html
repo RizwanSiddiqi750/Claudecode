@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Control Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a2a4a;
+            --border: #2d3e5f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--secondary);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            height: fit-content;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-list {
+            list-style: none;
+        }
+
+        .agent-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(30, 58, 138, 0.3);
+            border-left: 3px solid transparent;
+        }
+
+        .agent-item:hover {
+            background: rgba(14, 165, 233, 0.2);
+            border-left-color: var(--secondary);
+        }
+
+        .agent-item.active {
+            background: rgba(14, 165, 233, 0.3);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .agent-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .agent-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .agent-icon {
+            font-size: 3rem;
+        }
+
+        .agent-info h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .agent-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(245, 158, 11, 0.1));
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ===== QUERY SECTION ===== */
+        .query-section {
+            background: rgba(30, 58, 138, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .query-input {
+            width: 100%;
+            background: rgba(10, 14, 39, 0.5);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .query-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .query-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== RESPONSE SECTION ===== */
+        .response-section {
+            background: rgba(30, 58, 138, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .response-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+
+        .response-item {
+            background: rgba(10, 14, 39, 0.5);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--secondary);
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .response-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .response-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===== TASK HISTORY ===== */
+        .history-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-table tr:hover {
+            background: rgba(30, 58, 138, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-running {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">🤖 Agent Control Center</div>
+            <div class="header-buttons">
+                <button class="btn btn-secondary" onclick="goBack()">← Back to Dashboard</button>
+                <button class="btn btn-primary" onclick="launchFullTeam()">🚀 Launch Full Pipeline</button>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- SIDEBAR: AGENT LIST -->
+            <div class="sidebar">
+                <div class="sidebar-title">📋 Agents</div>
+                <ul class="agent-list">
+                    <li class="agent-item active" onclick="selectAgent('lead-gen')">📍 Lead Generation</li>
+                    <li class="agent-item" onclick="selectAgent('qualification')">✅ Qualification</li>
+                    <li class="agent-item" onclick="selectAgent('pitch')">💬 Sales Pitch</li>
+                    <li class="agent-item" onclick="selectAgent('proposal')">📄 Proposal Gen</li>
+                    <li class="agent-item" onclick="selectAgent('objection')">⚔️ Objection Handler</li>
+                    <li class="agent-item" onclick="selectAgent('closing')">🎉 Closing</li>
+                </ul>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <!-- AGENT PANEL -->
+                <div class="agent-panel">
+                    <div class="agent-header">
+                        <div class="agent-title-section">
+                            <div class="agent-icon">📍</div>
+                            <div class="agent-info">
+                                <h1 id="agentTitle">Lead Generation</h1>
+                                <div class="agent-status">
+                                    <div class="status-indicator"></div>
+                                    <span>Online & Ready</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agent-controls">
+                            <div class="stat-box">
+                                <div class="stat-value">247</div>
+                                <div class="stat-label">Tasks Done</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">98.5%</div>
+                                <div class="stat-label">Success Rate</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">2.3s</div>
+                                <div class="stat-label">Avg Time</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        <span id="agentDesc">Finds and researches potential clients matching your ideal customer profile. Searches databases, analyzes online presence, and gathers contact information.</span>
+                    </p>
+                </div>
+
+                <!-- QUERY SECTION -->
+                <div class="query-section">
+                    <div class="section-title">💬 Ask or Command This Agent</div>
+                    <textarea class="query-input" id="queryInput" placeholder="Ask the agent a question or give it a command..."></textarea>
+                    <div class="query-buttons">
+                        <button class="btn btn-primary" onclick="askAgent()">❓ Ask Question</button>
+                        <button class="btn btn-secondary" onclick="runAgentTask()">▶️ Run Task</button>
+                        <button class="btn btn-secondary" onclick="clearQuery()">Clear</button>
+                    </div>
+                </div>
+
+                <!-- RESPONSE SECTION -->
+                <div class="response-section">
+                    <div class="section-title">📤 Agent Response</div>
+                    <div id="responseContent">
+                        <div class="response-empty">💭 Responses will appear here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK HISTORY -->
+        <div class="history-section">
+            <div class="section-title">📊 Task History</div>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Agent</th>
+                        <th>Task/Question</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>14:35:22</td>
+                        <td>Lead Generation</td>
+                        <td>Find B2B SaaS leads in tech industry</td>
+                        <td><span class="status-badge status-completed">✓ Completed</span></td>
+                        <td>2.1s</td>
+                    </tr>
+                    <tr>
+                        <td>14:32:45</td>
+                        <td>Lead Qualification</td>
+                        <td>Score leads by budget and intent</td>
+                        <td><span class="status-badge status-completed">✓ Completed</span></td>
+                        <td>1.8s</td>
+                    </tr>
+                    <tr>
+                        <td>14:30:11</td>
+                        <td>Sales Pitch</td>
+                        <td>Create personalized pitch for enterprise</td>
+                        <td><span class="status-badge status-completed">✓ Completed</span></td>
+                        <td>3.2s</td>
+                    </tr>
+                    <tr>
+                        <td>14:28:33</td>
+                        <td>Proposal Generator</td>
+                        <td>Generate custom proposal with pricing</td>
+                        <td><span class="status-badge status-completed">✓ Completed</span></td>
+                        <td>4.5s</td>
+                    </tr>
+                    <tr>
+                        <td>14:25:55</td>
+                        <td>Objection Handler</td>
+                        <td>Handle objection: Too expensive</td>
+                        <td><span class="status-badge status-completed">✓ Completed</span></td>
+                        <td>2.0s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const agents = {
+            'lead-gen': {
+                title: 'Lead Generation',
+                icon: '📍',
+                description: 'Finds and researches potential clients matching your ideal customer profile. Searches databases, analyzes online presence, and gathers contact information.'
+            },
+            'qualification': {
+                title: 'Lead Qualification',
+                icon: '✅',
+                description: 'Analyzes and scores leads, determines fit with your solution, identifies decision makers, and filters out unqualified prospects.'
+            },
+            'pitch': {
+                title: 'Sales Pitch',
+                icon: '💬',
+                description: 'Creates personalized sales pitches, crafts compelling outreach messages, and handles initial contact with prospects.'
+            },
+            'proposal': {
+                title: 'Proposal Generator',
+                icon: '📄',
+                description: 'Generates customized proposals with pricing, timeline, deliverables, and ROI projections based on prospect needs.'
+            },
+            'objection': {
+                title: 'Objection Handler',
+                icon: '⚔️',
+                description: 'Handles client objections with proven strategies, provides counter-arguments, and moves deals closer to closure.'
+            },
+            'closing': {
+                title: 'Closing Agent',
+                icon: '🎉',
+                description: 'Finalizes deals, prepares contracts, answers final questions, and sets up client onboarding process.'
+            }
+        };
+
+        let currentAgent = 'lead-gen';
+
+        function selectAgent(agentId) {
+            currentAgent = agentId;
+            const agent = agents[agentId];
+
+            document.getElementById('agentTitle').textContent = agent.title;
+            document.getElementById('agentDesc').textContent = agent.description;
+
+            document.querySelectorAll('.agent-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('responseContent').innerHTML = '<div class="response-empty">💭 Responses will appear here...</div>';
+            document.getElementById('queryInput').value = '';
+        }
+
+        function askAgent() {
+            const query = document.getElementById('queryInput').value;
+            if (!query.trim()) {
+                alert('Please enter a question');
+                return;
+            }
+
+            const agent = agents[currentAgent];
+            const responseDiv = document.getElementById('responseContent');
+            responseDiv.innerHTML = '';
+
+            const response = document.createElement('div');
+            response.className = 'response-item';
+
+            const time = new Date().toLocaleTimeString();
+            response.innerHTML = `
+                <div class="response-time">🕐 ${time}</div>
+                <div class="response-content">
+                    <strong>Your Question:</strong> ${query}<br><br>
+                    <strong>${agent.title} Response:</strong><br>
+                    Processing your query and generating a detailed response based on best practices and your business context...
+                </div>
+            `;
+
+            responseDiv.appendChild(response);
+
+            // Simulate response
+            setTimeout(() => {
+                const followUp = document.createElement('div');
+                followUp.className = 'response-item';
+                followUp.innerHTML = `
+                    <div class="response-time">✓ Response generated</div>
+                    <div class="response-content">
+                        I've analyzed your request and generated a comprehensive response. You can now view detailed recommendations, actionable steps, and next actions tailored to your specific query.
+                    </div>
+                `;
+                responseDiv.appendChild(followUp);
+            }, 1500);
+        }
+
+        function runAgentTask() {
+            const query = document.getElementById('queryInput').value;
+            if (!query.trim()) {
+                alert('Please enter a task');
+                return;
+            }
+
+            const agent = agents[currentAgent];
+            const responseDiv = document.getElementById('responseContent');
+            responseDiv.innerHTML = '';
+
+            const response = document.createElement('div');
+            response.className = 'response-item';
+
+            const time = new Date().toLocaleTimeString();
+            response.innerHTML = `
+                <div class="response-time">🕐 ${time}</div>
+                <div class="response-content">
+                    <strong>Task:</strong> ${query}<br><br>
+                    <strong>Status:</strong> ⏳ Running...<br>
+                    Agent is executing the task and gathering information...
+                </div>
+            `;
+
+            responseDiv.appendChild(response);
+
+            // Simulate completion
+            setTimeout(() => {
+                const completion = document.createElement('div');
+                completion.className = 'response-item';
+                completion.innerHTML = `
+                    <div class="response-time">✓ ${new Date().toLocaleTimeString()}</div>
+                    <div class="response-content">
+                        <strong>Task Completed Successfully!</strong><br><br>
+                        Results are ready. The agent has processed your request and generated actionable outputs ready for review.
+                    </div>
+                `;
+                responseDiv.appendChild(completion);
+            }, 2000);
+        }
+
+        function clearQuery() {
+            document.getElementById('queryInput').value = '';
+        }
+
+        function goBack() {
+            window.location.href = 'ai-agents-dashboard.html';
+        }
+
+        function launchFullTeam() {
+            alert('Launching full pipeline... All agents will work together to process leads from start to finish');
+        }
+    </script>
+</body>
+</html>
