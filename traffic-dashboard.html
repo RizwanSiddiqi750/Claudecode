@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Traffic Dashboard - Protection One PK</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a2a4a;
+            --border: #2d3e5f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            border: 1px solid var(--success);
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ===== CITY GRID ===== */
+        .cities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .city-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .city-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2);
+        }
+
+        .cctv-viewer {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #1a2a4a 0%, #0f1a35 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cctv-viewer canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .city-info {
+            padding: 1.5rem;
+        }
+
+        .city-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge.busy {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--warning);
+        }
+
+        .status-badge.moderate {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+        }
+
+        .status-badge.smooth {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .traffic-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .traffic-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .traffic-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 3px;
+            animation: fillBar 2s ease-in-out infinite;
+        }
+
+        @keyframes fillBar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .city-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.35rem;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .btn-small:hover {
+            background: var(--secondary);
+        }
+
+        /* ===== AD PANEL ===== */
+        .ad-banner {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .ad-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* ===== NOTIFICATIONS ===== */
+        .notifications-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid var(--secondary);
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            animation: slideInLeft 0.6s ease-out backwards;
+        }
+
+        .notification-item:nth-child(1) { animation-delay: 0s; }
+        .notification-item:nth-child(2) { animation-delay: 0.1s; }
+        .notification-item:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+        }
+
+        .notification-content h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .cities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="navbar-brand" onclick="window.location.href='index.html'">
+            <div class="logo-icon">🛡️</div>
+            <span class="brand-text">Protection One PK</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="traffic-dashboard.html">Traffic Live</a></li>
+            <li><a href="cities.html">Cities</a></li>
+            <li><a href="domain-hosting.html">Domain Hosting</a></li>
+            <li><a href="admin.html">Dashboard</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-primary" onclick="window.location.href='admin.html'">View Dashboard</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="dashboard-header">
+            <div class="header-title">
+                <h1>🚦 Live Traffic Monitor</h1>
+                <p>CCTV-Linked Real-Time Updates | 800+ Smart Cameras</p>
+            </div>
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <span>LIVE FEED ACTIVE</span>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="notifications-panel">
+            <h3 style="margin-bottom: 1rem;">🔔 Active Alerts</h3>
+            <div class="notification-item">
+                <div class="notification-icon">⚠️</div>
+                <div class="notification-content">
+                    <h4>Heavy Traffic - Lahore</h4>
+                    <p>GT Road: 82% congestion. Recommended: MM Alam Road</p>
+                    <div class="notification-time">2 min ago</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">✅</div>
+                <div class="notification-content">
+                    <h4>Green Light - Karachi</h4>
+                    <p>Clifton Road: Clear flow detected. Perfect time to travel!</p>
+                    <div class="notification-time">5 min ago</div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-icon">🤖</div>
+                <div class="notification-content">
+                    <h4>AI Prediction - Islamabad</h4>
+                    <p>Expect 15% higher traffic at 6 PM. Plan accordingly!</p>
+                    <div class="notification-time">Just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CITIES GRID WITH ANIMATED CCTV -->
+        <div class="cities-grid">
+            <!-- ISLAMABAD -->
+            <div class="city-card">
+                <div class="cctv-viewer">
+                    <canvas id="cctvIslamabad"></canvas>
+                </div>
+                <div class="city-info">
+                    <h2 class="city-name">Islamabad</h2>
+                    <div class="status-badge busy">🔴 BUSY (67%)</div>
+
+                    <div class="traffic-bar">
+                        <div class="traffic-bar-fill" style="width: 67%; background: linear-gradient(90deg, var(--warning), var(--accent));"></div>
+                    </div>
+
+                    <div class="traffic-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">22 km/h</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">CCTV Cameras</div>
+                            <div class="stat-value">156</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-small">View Map</button>
+                        <button class="btn-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAHORE -->
+            <div class="city-card">
+                <div class="cctv-viewer">
+                    <canvas id="cctvLahore"></canvas>
+                </div>
+                <div class="city-info">
+                    <h2 class="city-name">Lahore</h2>
+                    <div class="status-badge busy">🔴 VERY BUSY (82%)</div>
+
+                    <div class="traffic-bar">
+                        <div class="traffic-bar-fill" style="width: 82%; background: linear-gradient(90deg, #ef4444, var(--warning));"></div>
+                    </div>
+
+                    <div class="traffic-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">15 km/h</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">CCTV Cameras</div>
+                            <div class="stat-value">248</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-small">View Map</button>
+                        <button class="btn-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KARACHI -->
+            <div class="city-card">
+                <div class="cctv-viewer">
+                    <canvas id="cctvKarachi"></canvas>
+                </div>
+                <div class="city-info">
+                    <h2 class="city-name">Karachi</h2>
+                    <div class="status-badge moderate">🟡 MODERATE (45%)</div>
+
+                    <div class="traffic-bar">
+                        <div class="traffic-bar-fill" style="width: 45%; background: linear-gradient(90deg, var(--accent), var(--secondary));"></div>
+                    </div>
+
+                    <div class="traffic-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">38 km/h</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">CCTV Cameras</div>
+                            <div class="stat-value">312</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-small">View Map</button>
+                        <button class="btn-small">Details</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAWALPINDI -->
+            <div class="city-card">
+                <div class="cctv-viewer">
+                    <canvas id="cctvRawalpindi"></canvas>
+                </div>
+                <div class="city-info">
+                    <h2 class="city-name">Rawalpindi</h2>
+                    <div class="status-badge smooth">✅ SMOOTH (28%)</div>
+
+                    <div class="traffic-bar">
+                        <div class="traffic-bar-fill" style="width: 28%; background: linear-gradient(90deg, var(--success), var(--secondary));"></div>
+                    </div>
+
+                    <div class="traffic-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">52 km/h</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">CCTV Cameras</div>
+                            <div class="stat-value">89</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-small">View Map</button>
+                        <button class="btn-small">Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AD BANNER -->
+        <div class="ad-banner">
+            <h3>🌐 Secure Your Domain with Protection One PK</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Host your business with the same smart city infrastructure protecting millions</p>
+            <button class="btn btn-primary" onclick="window.location.href='domain-hosting.html'">Get Your Domain Now - 70% OFF</button>
+        </div>
+    </div>
+
+    <script>
+        // Animated CCTV Road Visualization
+        function createCCTVAnimation(canvasId, congestionLevel) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let animationFrame = 0;
+
+            function drawRoad() {
+                // Canvas size
+                const width = canvas.width;
+                const height = canvas.height;
+
+                // Background
+                ctx.fillStyle = '#1a2a4a';
+                ctx.fillRect(0, 0, width, height);
+
+                // Road lanes
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 10]);
+                ctx.beginPath();
+                ctx.moveTo(0, height / 3);
+                ctx.lineTo(width, height / 3);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, (height * 2) / 3);
+                ctx.lineTo(width, (height * 2) / 3);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Animated vehicles
+                const numVehicles = Math.ceil(congestionLevel / 10);
+                for (let i = 0; i < numVehicles; i++) {
+                    const lane = i % 2;
+                    const y = lane === 0 ? height / 3 : (height * 2) / 3;
+                    const x = ((animationFrame * 2 + i * (width / numVehicles)) % (width + 40)) - 20;
+
+                    // Vehicle color based on speed
+                    ctx.fillStyle = congestionLevel > 70 ? '#ef4444' : congestionLevel > 40 ? '#f59e0b' : '#10b981';
+                    ctx.fillRect(x, y - 8, 30, 16);
+
+                    // Windows
+                    ctx.fillStyle = '#0ea5e9';
+                    ctx.fillRect(x + 5, y - 6, 8, 6);
+                    ctx.fillRect(x + 17, y - 6, 8, 6);
+                }
+
+                // CCTV indicator
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.7)';
+                ctx.beginPath();
+                ctx.arc(width - 30, 25, 12, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#10b981';
+                ctx.font = 'bold 20px Arial';
+                ctx.fillText('●', width - 36, 32);
+
+                // Congestion percentage
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = 'bold 16px Arial';
+                ctx.fillText(congestionLevel + '%', 10, height - 10);
+
+                // Speed indicator (decreases with congestion)
+                const speed = Math.max(10, 60 - congestionLevel);
+                ctx.fillStyle = speed > 40 ? '#10b981' : speed > 25 ? '#f59e0b' : '#ef4444';
+                ctx.fillText('⚡ ' + speed + ' km/h', width - 120, height - 10);
+
+                animationFrame++;
+                requestAnimationFrame(drawRoad);
+            }
+
+            // Set canvas size
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = 300;
+
+            drawRoad();
+        }
+
+        // Initialize all CCTV visualizations
+        window.addEventListener('load', () => {
+            createCCTVAnimation('cctvIslamabad', 67);
+            createCCTVAnimation('cctvLahore', 82);
+            createCCTVAnimation('cctvKarachi', 45);
+            createCCTVAnimation('cctvRawalpindi', 28);
+        });
+    </script>
+</body>
+</html>

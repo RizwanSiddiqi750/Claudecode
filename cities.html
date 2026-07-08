@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cities - Protection One PK</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a2a4a;
+            --border: #2d3e5f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .cities-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .city-showcase-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .city-showcase-card:nth-child(1) { animation-delay: 0s; }
+        .city-showcase-card:nth-child(2) { animation-delay: 0.1s; }
+        .city-showcase-card:nth-child(3) { animation-delay: 0.2s; }
+        .city-showcase-card:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .city-showcase-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            box-shadow: 0 20px 50px rgba(14, 165, 233, 0.2);
+        }
+
+        .city-hero {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(245, 158, 11, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .city-hero::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.3), transparent);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .city-hero::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.2), transparent);
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(30px); }
+        }
+
+        .city-details {
+            padding: 1.5rem;
+        }
+
+        .city-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .city-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .city-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .city-stat {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--secondary);
+            text-align: center;
+        }
+
+        .city-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .city-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .city-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            background: rgba(30, 58, 138, 0.3);
+            color: var(--secondary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-action:hover {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* ===== METRICS SECTION ===== */
+        .metrics-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .metrics-title {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            animation: slideInUp 0.6s ease-out backwards;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0s; }
+        .metric-card:nth-child(2) { animation-delay: 0.1s; }
+        .metric-card:nth-child(3) { animation-delay: 0.2s; }
+        .metric-card:nth-child(4) { animation-delay: 0.3s; }
+        .metric-card:nth-child(5) { animation-delay: 0.4s; }
+        .metric-card:nth-child(6) { animation-delay: 0.5s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metric-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .metric-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .cities-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="navbar-brand" onclick="window.location.href='index.html'">
+            <div class="logo-icon">🛡️</div>
+            <span class="brand-text">Protection One PK</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="traffic-dashboard.html">Traffic Live</a></li>
+            <li><a href="cities.html">Cities</a></li>
+            <li><a href="domain-hosting.html">Domain Hosting</a></li>
+            <li><a href="admin.html">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1>🌆 Pakistan's Smart Cities Network</h1>
+            <p>Real-time traffic intelligence across major metropolitan areas</p>
+        </div>
+
+        <!-- CITIES GRID -->
+        <div class="cities-showcase">
+            <!-- ISLAMABAD -->
+            <div class="city-showcase-card">
+                <div class="city-hero">🏛️</div>
+                <div class="city-details">
+                    <h2 class="city-name">Islamabad</h2>
+                    <p class="city-description">Capital city with modern infrastructure and organized traffic patterns</p>
+
+                    <div class="city-stats-grid">
+                        <div class="city-stat">
+                            <div class="city-stat-value">156</div>
+                            <div class="city-stat-label">CCTV Cameras</div>
+                        </div>
+                        <div class="city-stat">
+                            <div class="city-stat-value">67%</div>
+                            <div class="city-stat-label">Congestion</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-action" onclick="alert('Opening Islamabad Traffic Map...')">📍 Map</button>
+                        <button class="btn-action" onclick="alert('Loading detailed analytics...')">📊 Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAHORE -->
+            <div class="city-showcase-card">
+                <div class="city-hero">🕌</div>
+                <div class="city-details">
+                    <h2 class="city-name">Lahore</h2>
+                    <p class="city-description">Largest city with highest traffic volume and smart routing systems</p>
+
+                    <div class="city-stats-grid">
+                        <div class="city-stat">
+                            <div class="city-stat-value">248</div>
+                            <div class="city-stat-label">CCTV Cameras</div>
+                        </div>
+                        <div class="city-stat">
+                            <div class="city-stat-value">82%</div>
+                            <div class="city-stat-label">Congestion</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-action" onclick="alert('Opening Lahore Traffic Map...')">📍 Map</button>
+                        <button class="btn-action" onclick="alert('Loading detailed analytics...')">📊 Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KARACHI -->
+            <div class="city-showcase-card">
+                <div class="city-hero">🌊</div>
+                <div class="city-details">
+                    <h2 class="city-name">Karachi</h2>
+                    <p class="city-description">Port city with diverse traffic patterns and coastal routes</p>
+
+                    <div class="city-stats-grid">
+                        <div class="city-stat">
+                            <div class="city-stat-value">312</div>
+                            <div class="city-stat-label">CCTV Cameras</div>
+                        </div>
+                        <div class="city-stat">
+                            <div class="city-stat-value">45%</div>
+                            <div class="city-stat-label">Congestion</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-action" onclick="alert('Opening Karachi Traffic Map...')">📍 Map</button>
+                        <button class="btn-action" onclick="alert('Loading detailed analytics...')">📊 Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RAWALPINDI -->
+            <div class="city-showcase-card">
+                <div class="city-hero">🏔️</div>
+                <div class="city-details">
+                    <h2 class="city-name">Rawalpindi</h2>
+                    <p class="city-description">Military city with optimal traffic flow and efficient routes</p>
+
+                    <div class="city-stats-grid">
+                        <div class="city-stat">
+                            <div class="city-stat-value">89</div>
+                            <div class="city-stat-label">CCTV Cameras</div>
+                        </div>
+                        <div class="city-stat">
+                            <div class="city-stat-value">28%</div>
+                            <div class="city-stat-label">Congestion</div>
+                        </div>
+                    </div>
+
+                    <div class="city-actions">
+                        <button class="btn-action" onclick="alert('Opening Rawalpindi Traffic Map...')">📍 Map</button>
+                        <button class="btn-action" onclick="alert('Loading detailed analytics...')">📊 Analytics</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NETWORK METRICS -->
+        <div class="metrics-section">
+            <h2 class="metrics-title">📊 Network-Wide Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">📹</div>
+                    <div class="metric-value">805</div>
+                    <div class="metric-label">Total Cameras</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🚗</div>
+                    <div class="metric-value">2.3M</div>
+                    <div class="metric-label">Daily Commuters</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-value">99.8%</div>
+                    <div class="metric-label">System Uptime</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🤖</div>
+                    <div class="metric-value">150+</div>
+                    <div class="metric-label">AI Models</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📍</div>
+                    <div class="metric-value">10K+</div>
+                    <div class="metric-label">Road Segments</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⏱️</div>
+                    <div class="metric-value">Real-time</div>
+                    <div class="metric-label">Updates</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add scroll animations
+        const cards = document.querySelectorAll('.city-showcase-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        });
+
+        cards.forEach(card => observer.observe(card));
+    </script>
+</body>
+</html>

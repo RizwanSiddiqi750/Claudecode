@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Protection One PK</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a2a4a;
+            --border: #2d3e5f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary);
+        }
+
+        .btn-secondary {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--secondary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== KPI CARDS ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+            cursor: pointer;
+        }
+
+        .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+        .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+        .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+        .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+        .kpi-card:nth-child(5) { animation-delay: 0.5s; }
+        .kpi-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .kpi-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.2);
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--warning);
+        }
+
+        /* ===== CHARTS GRID ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            animation: slideInUp 0.8s ease-out backwards;
+        }
+
+        .chart-card:nth-child(1) { animation-delay: 0.1s; }
+        .chart-card:nth-child(2) { animation-delay: 0.2s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* ===== ACTIVITY TABLE ===== */
+        .activity-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activity-table th {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-table tr:hover {
+            background: rgba(30, 58, 138, 0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-alert {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--warning);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+
+            .activity-table {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="navbar-brand" onclick="window.location.href='index.html'">
+            <div class="logo-icon">🛡️</div>
+            <span class="brand-text">Protection One PK</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="traffic-dashboard.html">Traffic Live</a></li>
+            <li><a href="cities.html">Cities</a></li>
+            <li><a href="domain-hosting.html">Domain Hosting</a></li>
+            <li><a href="admin.html">Dashboard</a></li>
+        </ul>
+        <button class="btn-secondary">🔒 Logout</button>
+    </nav>
+
+    <div class="container">
+        <!-- TITLE -->
+        <h1 class="dashboard-title">📊 Admin Dashboard</h1>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">🚗 Total Daily Commuters</div>
+                <div class="kpi-value">2.3M</div>
+                <div class="kpi-trend trend-up">↑ 12% from yesterday</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">🎥 Active CCTV Cameras</div>
+                <div class="kpi-value">805</div>
+                <div class="kpi-trend trend-up">✓ All operational</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">⚠️ Active Alerts</div>
+                <div class="kpi-value">23</div>
+                <div class="kpi-trend trend-down">4 critical</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">🌐 Hosted Domains</div>
+                <div class="kpi-value">50K+</div>
+                <div class="kpi-trend trend-up">↑ 8% this month</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">💾 System Uptime</div>
+                <div class="kpi-value">99.98%</div>
+                <div class="kpi-trend trend-up">↑ Best in industry</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-label">💰 Monthly Revenue</div>
+                <div class="kpi-value">₨850K</div>
+                <div class="kpi-trend trend-up">↑ 25% growth</div>
+            </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="charts-grid">
+            <!-- TRAFFIC CHART -->
+            <div class="chart-card">
+                <h2 class="chart-title">📈 Traffic Trends (Last 7 Days)</h2>
+                <div class="chart-container">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+
+            <!-- REVENUE CHART -->
+            <div class="chart-card">
+                <h2 class="chart-title">💵 Revenue by Service</h2>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTIVITY LOG -->
+        <div class="activity-section">
+            <h2 class="activity-title">📋 Live Activity Log</h2>
+            <table class="activity-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Event</th>
+                        <th>City</th>
+                        <th>Details</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>14:35:22</td>
+                        <td>🚨 Alert Generated</td>
+                        <td>Lahore</td>
+                        <td>Heavy traffic detected on GT Road</td>
+                        <td><span class="status-badge status-alert">CRITICAL</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:32:45</td>
+                        <td>✅ Traffic Clear</td>
+                        <td>Rawalpindi</td>
+                        <td>Congestion level decreased to 15%</td>
+                        <td><span class="status-badge status-active">RESOLVED</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:30:11</td>
+                        <td>🤖 AI Prediction</td>
+                        <td>Islamabad</td>
+                        <td>Predicted 70% congestion at 6 PM</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:28:33</td>
+                        <td>📊 Domain Registered</td>
+                        <td>Hosting</td>
+                        <td>New domain: example.com registered</td>
+                        <td><span class="status-badge status-active">SUCCESS</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:25:55</td>
+                        <td>🎥 CCTV Offline</td>
+                        <td>Karachi</td>
+                        <td>Camera #245 went offline - restarted</td>
+                        <td><span class="status-badge status-active">FIXED</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:20:12</td>
+                        <td>📱 Notification Sent</td>
+                        <td>Multi-city</td>
+                        <td>500K users received traffic alerts</td>
+                        <td><span class="status-badge status-active">DELIVERED</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:15:44</td>
+                        <td>💾 Backup Complete</td>
+                        <td>Server</td>
+                        <td>Daily backup completed successfully</td>
+                        <td><span class="status-badge status-active">SUCCESS</span></td>
+                    </tr>
+                    <tr>
+                        <td>14:10:32</td>
+                        <td>🔐 Security Update</td>
+                        <td>System</td>
+                        <td>SSL certificates renewed for all domains</td>
+                        <td><span class="status-badge status-active">ACTIVE</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js Configuration
+        const chartConfig = {
+            defaultOptions: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#cbd5e1',
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 42, 74, 0.9)',
+                        titleColor: '#f1f5f9',
+                        bodyColor: '#cbd5e1'
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(45, 62, 95, 0.3)' }
+                    },
+                    y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(45, 62, 95, 0.3)' }
+                    }
+                }
+            }
+        };
+
+        // Traffic Trends Chart
+        const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+        new Chart(trafficCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Islamabad',
+                        data: [45, 52, 48, 65, 67, 55, 42],
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Lahore',
+                        data: [72, 78, 80, 82, 85, 75, 70],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Karachi',
+                        data: [35, 40, 42, 45, 48, 43, 38],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                ...chartConfig.defaultOptions,
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Domain Hosting', 'Traffic Analytics', 'Ad Network', 'Enterprise'],
+                datasets: [{
+                    data: [35, 25, 30, 10],
+                    backgroundColor: [
+                        '#0ea5e9',
+                        '#f59e0b',
+                        '#10b981',
+                        '#ef4444'
+                    ],
+                    borderColor: '#1a2a4a',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                ...chartConfig.defaultOptions,
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    ...chartConfig.defaultOptions.plugins,
+                    legend: {
+                        ...chartConfig.defaultOptions.plugins.legend,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Animate KPI cards on load
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.kpi-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animation = `popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards`;
+                    card.style.animationDelay = `${index * 0.1}s`;
+                }, 0);
+            });
+
+            // Add pulse to critical alerts
+            const criticalBadges = document.querySelectorAll('.status-alert');
+            criticalBadges.forEach(badge => {
+                badge.classList.add('pulse-animation');
+            });
+        });
+    </script>
+</body>
+</html>

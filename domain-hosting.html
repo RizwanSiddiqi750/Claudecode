@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Hosting - Protection One PK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0a0e27;
+            --card-bg: #1a2a4a;
+            --border: #2d3e5f;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0f1a35 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .nav-menu a:hover {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: slideInDown 0.8s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            animation: scaleIn 0.6s ease-out backwards;
+            position: relative;
+        }
+
+        .pricing-card:nth-child(1) { animation-delay: 0.1s; }
+        .pricing-card:nth-child(2) { animation-delay: 0.2s; }
+        .pricing-card:nth-child(3) { animation-delay: 0.3s; }
+        .pricing-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .pricing-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(14, 165, 233, 0.25);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(14, 165, 233, 0.1));
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .plan-description {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .features-list {
+            text-align: left;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+            animation: slideInLeft 0.4s ease-out backwards;
+        }
+
+        .features-list li:nth-child(1) { animation-delay: 0.1s; }
+        .features-list li:nth-child(2) { animation-delay: 0.15s; }
+        .features-list li:nth-child(3) { animation-delay: 0.2s; }
+        .features-list li:nth-child(4) { animation-delay: 0.25s; }
+        .features-list li:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .features-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 700;
+            min-width: 20px;
+        }
+
+        .btn-get-started {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .features-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            background: rgba(30, 58, 138, 0.2);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0s; }
+        .feature-item:nth-child(2) { animation-delay: 0.1s; }
+        .feature-item:nth-child(3) { animation-delay: 0.2s; }
+        .feature-item:nth-child(4) { animation-delay: 0.3s; }
+        .feature-item:nth-child(5) { animation-delay: 0.4s; }
+        .feature-item:nth-child(6) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-item:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="navbar-brand" onclick="window.location.href='index.html'">
+            <div class="logo-icon">🛡️</div>
+            <span class="brand-text">Protection One PK</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="traffic-dashboard.html">Traffic Live</a></li>
+            <li><a href="cities.html">Cities</a></li>
+            <li><a href="domain-hosting.html">Domain Hosting</a></li>
+            <li><a href="admin.html">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- PAGE HERO -->
+        <div class="page-hero">
+            <h1>🌐 Premium Domain Hosting</h1>
+            <p>Secure, Fast, Reliable - Backed by Smart City Infrastructure</p>
+        </div>
+
+        <!-- PRICING CARDS -->
+        <div class="pricing-grid">
+            <!-- STARTER -->
+            <div class="pricing-card">
+                <div class="plan-name">🚀 Starter</div>
+                <div class="plan-price">₨999<span>/month</span></div>
+                <p class="plan-description">Perfect for beginners</p>
+
+                <ul class="features-list">
+                    <li>1 Domain</li>
+                    <li>5 GB Storage</li>
+                    <li>100 Email Accounts</li>
+                    <li>Free SSL Certificate</li>
+                    <li>24/7 Support</li>
+                </ul>
+
+                <button class="btn-get-started" onclick="alert('Redirecting to checkout...')">Get Started</button>
+            </div>
+
+            <!-- PROFESSIONAL -->
+            <div class="pricing-card featured">
+                <div class="pricing-badge">🔥 MOST POPULAR</div>
+                <div class="plan-name">💼 Professional</div>
+                <div class="plan-price">₨1,999<span>/month</span></div>
+                <p class="plan-description">For growing businesses</p>
+
+                <ul class="features-list">
+                    <li>5 Domains</li>
+                    <li>50 GB Storage</li>
+                    <li>Unlimited Emails</li>
+                    <li>Free SSL Certificates</li>
+                    <li>24/7 Priority Support</li>
+                </ul>
+
+                <button class="btn-get-started" onclick="alert('Redirecting to checkout...')">Get Started</button>
+            </div>
+
+            <!-- BUSINESS -->
+            <div class="pricing-card">
+                <div class="plan-name">🏢 Business</div>
+                <div class="plan-price">₨3,999<span>/month</span></div>
+                <p class="plan-description">For established companies</p>
+
+                <ul class="features-list">
+                    <li>Unlimited Domains</li>
+                    <li>500 GB Storage</li>
+                    <li>Unlimited Emails</li>
+                    <li>Auto SSL Renewal</li>
+                    <li>Dedicated Support</li>
+                </ul>
+
+                <button class="btn-get-started" onclick="alert('Redirecting to checkout...')">Get Started</button>
+            </div>
+
+            <!-- ENTERPRISE -->
+            <div class="pricing-card">
+                <div class="plan-name">🚀 Enterprise</div>
+                <div class="plan-price">Custom<span>/month</span></div>
+                <p class="plan-description">For large organizations</p>
+
+                <ul class="features-list">
+                    <li>Unlimited Everything</li>
+                    <li>2 TB Storage</li>
+                    <li>White Label Options</li>
+                    <li>API Access</li>
+                    <li>24/7 Dedicated Support</li>
+                </ul>
+
+                <button class="btn-get-started" onclick="alert('Contacting sales team...')">Contact Sales</button>
+            </div>
+        </div>
+
+        <!-- FEATURES SECTION -->
+        <div class="features-section">
+            <h2 class="section-title">✨ Why Host with Protection One PK?</h2>
+            <div class="features-showcase">
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Lightning Fast</h3>
+                    <p class="feature-text">99.9% uptime guaranteed with blazing-fast load times</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-text">256-bit SSL encryption and daily backups</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Smart Analytics</h3>
+                    <p class="feature-text">Real-time traffic insights from CCTV integration</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌍</div>
+                    <h3 class="feature-title">Global CDN</h3>
+                    <p class="feature-text">Content delivered worldwide from multiple servers</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Mobile Optimized</h3>
+                    <p class="feature-text">Responsive hosting for all device sizes</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI Optimization</h3>
+                    <p class="feature-text">Automatic performance optimization with ML</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA SECTION -->
+        <div style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(245, 158, 11, 0.1)); border-radius: 1rem; padding: 3rem 2rem; text-align: center; margin-bottom: 2rem; border: 1px solid var(--border);">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Ready to Get Your Domain?</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">Join 50,000+ websites hosted on Protection One PK</p>
+            <button class="btn-primary" onclick="alert('Starting domain search...')">🔍 Search Domains Now</button>
+        </div>
+    </div>
+
+    <script>
+        // Smooth animations on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.pricing-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animation = `scaleIn 0.6s ease-out forwards`;
+                    card.style.animationDelay = `${index * 0.1}s`;
+                }, 0);
+            });
+        });
+    </script>
+</body>
+</html>
