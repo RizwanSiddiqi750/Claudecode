@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protection One PK - Smart Traffic & Domain Hosting Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #ef4444;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a2f4d 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(30, 58, 138, 0.5);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(30, 58, 138, 0.1);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== GRID LAYOUT ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-badge.live {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-badge.busy {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--warning);
+        }
+
+        .status-badge.moderate {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+        }
+
+        /* ===== TRAFFIC CARDS ===== */
+        .traffic-card {
+            position: relative;
+        }
+
+        .city-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .traffic-indicator {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .indicator-dot.good {
+            background: var(--success);
+        }
+
+        .indicator-dot.moderate {
+            background: var(--accent);
+        }
+
+        .indicator-dot.busy {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .traffic-bars {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .traffic-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .traffic-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .traffic-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(30, 58, 138, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* ===== ADVERTISEMENT PANEL ===== */
+        .ad-panel {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border: 2px dashed var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.1), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .ad-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ad-label {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .ad-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ad-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0.5rem 0;
+        }
+
+        .stat-card-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-box:hover {
+            border-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== DOMAIN HOSTING CTA ===== */
+        .hosting-cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .hosting-cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .hosting-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* ===== NOTIFICATION SYSTEM ===== */
+        .notification-center {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(30, 58, 138, 0.2);
+            border-left: 3px solid var(--secondary);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: rgba(15, 23, 42, 0.5);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .feature-box, .stat-card {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="logo">🛡️ Protection One PK</div>
+        <nav class="header-nav">
+            <ul class="nav-links">
+                <li><a href="#traffic">Traffic</a></li>
+                <li><a href="#hosting">Domain Hosting</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#notifications">Alerts</a></li>
+            </ul>
+            <button class="btn-primary">Dashboard Login</button>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <h1>🚦 Real-Time Smart Traffic Intelligence</h1>
+            <p>Live CCTV-linked traffic monitoring for Pakistan's major cities + Fast, Reliable Domain Hosting</p>
+            <div class="cta-buttons">
+                <button class="btn-primary">📊 Check Live Traffic Now</button>
+                <button class="btn-secondary">🌐 Get Your Domain Today</button>
+                <button class="btn-secondary">🔔 Enable Notifications</button>
+            </div>
+        </section>
+
+        <!-- QUICK STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-card-value">4M+</div>
+                <div class="stat-card-label">Daily Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-card-value">99.9%</div>
+                <div class="stat-card-label">Uptime Guarantee</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛡️</div>
+                <div class="stat-card-value">256-bit</div>
+                <div class="stat-card-label">SSL Encryption</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-card-value">50K+</div>
+                <div class="stat-card-label">Domains Hosted</div>
+            </div>
+        </div>
+
+        <!-- LIVE TRAFFIC SECTION -->
+        <section id="traffic">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--text-primary);">🚗 Live Traffic Updates</h2>
+
+            <div class="dashboard-grid">
+                <!-- ISLAMABAD -->
+                <div class="card traffic-card">
+                    <div class="card-header">
+                        <div class="card-title">Islamabad</div>
+                        <div class="status-badge busy">🔴 BUSY</div>
+                    </div>
+                    <div class="city-status">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Linked CCTV Cameras: 156</span>
+                        <div class="traffic-indicator">
+                            <div class="indicator-dot busy"></div>
+                            <span style="font-size: 0.9rem;">67% Congestion</span>
+                        </div>
+                    </div>
+                    <div class="traffic-bars">
+                        <div class="traffic-bar"><div class="traffic-bar-fill" style="width: 67%"></div></div>
+                    </div>
+                    <div class="traffic-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">22 km/h</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Est. Delay</div>
+                            <div class="stat-value">+18 min</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; margin-top: 1rem;">📍 View Detailed Map</button>
+                </div>
+
+                <!-- LAHORE -->
+                <div class="card traffic-card">
+                    <div class="card-header">
+                        <div class="card-title">Lahore</div>
+                        <div class="status-badge busy">🔴 VERY BUSY</div>
+                    </div>
+                    <div class="city-status">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Linked CCTV Cameras: 248</span>
+                        <div class="traffic-indicator">
+                            <div class="indicator-dot busy"></div>
+                            <span style="font-size: 0.9rem;">82% Congestion</span>
+                        </div>
+                    </div>
+                    <div class="traffic-bars">
+                        <div class="traffic-bar"><div class="traffic-bar-fill" style="width: 82%"></div></div>
+                    </div>
+                    <div class="traffic-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">15 km/h</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Est. Delay</div>
+                            <div class="stat-value">+35 min</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; margin-top: 1rem;">📍 View Detailed Map</button>
+                </div>
+
+                <!-- KARACHI -->
+                <div class="card traffic-card">
+                    <div class="card-header">
+                        <div class="card-title">Karachi</div>
+                        <div class="status-badge moderate">🟡 MODERATE</div>
+                    </div>
+                    <div class="city-status">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Linked CCTV Cameras: 312</span>
+                        <div class="traffic-indicator">
+                            <div class="indicator-dot moderate"></div>
+                            <span style="font-size: 0.9rem;">45% Congestion</span>
+                        </div>
+                    </div>
+                    <div class="traffic-bars">
+                        <div class="traffic-bar"><div class="traffic-bar-fill" style="width: 45%"></div></div>
+                    </div>
+                    <div class="traffic-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">38 km/h</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Est. Delay</div>
+                            <div class="stat-value">+8 min</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; margin-top: 1rem;">📍 View Detailed Map</button>
+                </div>
+
+                <!-- RAWALPINDI -->
+                <div class="card traffic-card">
+                    <div class="card-header">
+                        <div class="card-title">Rawalpindi</div>
+                        <div class="status-badge live">✅ SMOOTH</div>
+                    </div>
+                    <div class="city-status">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Linked CCTV Cameras: 89</span>
+                        <div class="traffic-indicator">
+                            <div class="indicator-dot good"></div>
+                            <span style="font-size: 0.9rem;">28% Congestion</span>
+                        </div>
+                    </div>
+                    <div class="traffic-bars">
+                        <div class="traffic-bar"><div class="traffic-bar-fill" style="width: 28%"></div></div>
+                    </div>
+                    <div class="traffic-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Speed</div>
+                            <div class="stat-value">52 km/h</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Est. Delay</div>
+                            <div class="stat-value">-5 min</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; margin-top: 1rem;">📍 View Detailed Map</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVERTISEMENT SPACE #1 -->
+        <div class="ad-panel" style="margin: 3rem 0;">
+            <div class="ad-content">
+                <div class="ad-label">💼 FEATURED PARTNER</div>
+                <div class="ad-title">Secure Your Business Online</div>
+                <div class="ad-description">
+                    Premium domain hosting with 24/7 security monitoring and CCTV integration for your peace of mind
+                </div>
+                <button class="btn-primary">Get Your Domain Today - 70% OFF 🎉</button>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS SECTION -->
+        <section id="notifications">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; color: var(--text-primary);">🔔 Smart Notifications & AI Recommendations</h2>
+            <div class="notification-center">
+                <div class="notification-item">
+                    <div class="notification-icon">⚠️</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Heavy Traffic Alert - Lahore</div>
+                        <div class="notification-text">GT Road experiencing 82% congestion. Recommended alternate: MM Alam Road. ETA 25 mins</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon">✅</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Green Light - Karachi Route</div>
+                        <div class="notification-text">Your usual commute route is now clear. Estimated time: 22 mins (saved 12 mins!)</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon">🤖</div>
+                    <div class="notification-content">
+                        <div class="notification-title">AI Suggestion Based on Your Patterns</div>
+                        <div class="notification-text">You usually visit Islamabad at 6 PM. Tomorrow expect 15% higher traffic. Plan accordingly!</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon">📍</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Security Incident - Rawalpindi</div>
+                        <div class="notification-text">CCTV system detected unusual activity near Main Boulevard. Authorities notified.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section id="features">
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; color: var(--text-primary);">✨ Why Choose Protection One PK?</h2>
+            <div class="features">
+                <div class="feature-box">
+                    <div class="feature-icon">🚨</div>
+                    <div class="feature-title">CCTV Integration</div>
+                    <div class="feature-text">Direct feed from 800+ smart security cameras across major cities for real-time accuracy</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI Predictions</div>
+                    <div class="feature-text">Machine learning analyzes patterns to predict traffic and suggest optimal routes</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Smart Notifications</div>
+                    <div class="feature-text">Personalized alerts based on your location, schedule, and travel patterns</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-title">Enterprise Security</div>
+                    <div class="feature-text">256-bit SSL encryption and compliance with international security standards</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Domain Hosting</div>
+                    <div class="feature-text">Fast, reliable hosting with 99.9% uptime and free SSL certificates</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-title">Ad-Supported</div>
+                    <div class="feature-text">Free traffic tool supported by targeted advertising - no user subscriptions needed</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVERTISEMENT SPACE #2 -->
+        <div class="ad-panel" style="margin: 3rem 0;">
+            <div class="ad-content">
+                <div class="ad-label">🎁 LIMITED TIME OFFER</div>
+                <div class="ad-title">Protect Your Online Presence Today</div>
+                <div class="ad-description">
+                    Use our smart traffic data to optimize your business operations. Professional hosting included.
+                </div>
+                <button class="btn-primary">✨ Claim Your Free Trial - No Credit Card 🎯</button>
+            </div>
+        </div>
+
+        <!-- DOMAIN HOSTING CTA -->
+        <section id="hosting">
+            <div class="hosting-cta">
+                <h2>🌐 Professional Domain Hosting + Traffic Analytics Bundle</h2>
+                <p>Your website protected by the same CCTV-linked security systems that power our traffic intelligence</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn-secondary" style="background: white; color: var(--primary);">Register Domain Now</button>
+                    <button class="btn-secondary" style="background: rgba(255,255,255,0.2);">View Pricing Plans</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVERTISEMENT SPACE #3 -->
+        <div class="ad-panel" style="margin: 3rem 0;">
+            <div class="ad-content">
+                <div class="ad-label">🏆 TRUSTED BY AUTHORITIES</div>
+                <div class="ad-title">Integrated with Pakistan's Smart City Initiative</div>
+                <div class="ad-description">
+                    Official partner with 4 provincial governments. Real-time data sharing with traffic authorities and emergency services.
+                </div>
+                <button class="btn-primary">Learn More About Enterprise Plans 🔗</button>
+            </div>
+        </div>
+
+        <!-- CUSTOMER TRACKING & AI SYSTEM INFO -->
+        <div class="card" style="margin: 2rem 0; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(245, 158, 11, 0.1)); border: 2px solid var(--border);">
+            <div class="card-header">
+                <div class="card-title">🎯 Future: Smart Customer Behavior Analytics</div>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                Our next-generation system will track your browsing patterns to understand:
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 0.5rem;">
+                    <strong style="color: var(--secondary);">⏰ Optimal Visit Times</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">AI learns when you prefer to travel</p>
+                </div>
+                <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 0.5rem;">
+                    <strong style="color: var(--secondary);">📍 Location Interests</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Personalized suggestions for areas you frequent</p>
+                </div>
+                <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 0.5rem;">
+                    <strong style="color: var(--secondary);">🎁 Smart Promotions</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Offers from partners near your interests</p>
+                </div>
+                <div style="background: rgba(30, 58, 138, 0.3); padding: 1rem; border-radius: 0.5rem;">
+                    <strong style="color: var(--secondary);">🚀 Revenue Sharing</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Earn commissions from recommended services</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Protection One PK | Smart Traffic Intelligence + Domain Hosting</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">
+            Privacy Policy | Terms of Service | Advertise With Us | Security Portal
+        </p>
+    </footer>
+
+    <script>
+        // Simulated real-time traffic updates
+        setInterval(() => {
+            document.querySelectorAll('.indicator-dot').forEach(dot => {
+                if (dot.classList.contains('busy')) {
+                    dot.style.opacity = Math.random() > 0.5 ? '1' : '0.5';
+                }
+            });
+        }, 2000);
+
+        // Button interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!this.textContent.includes('Login') && !this.textContent.includes('Map') &&
+                    !this.textContent.includes('Pricing')) {
+                    console.log('CTA clicked:', this.textContent);
+                    alert('🚀 Redirecting to ' + this.textContent.split('•')[0]);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
