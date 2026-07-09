@@ -547,6 +547,174 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* OUTPUT PANEL */
+        .output-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .output-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .output-count {
+            font-size: 12px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .outputs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .output-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .output-item.approved {
+            border-left: 4px solid var(--success);
+            background: rgba(22, 163, 74, 0.05);
+        }
+
+        .output-item.rejected {
+            border-left: 4px solid var(--critical);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .output-item.pending {
+            border-left: 4px solid var(--attention);
+        }
+
+        .output-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .output-agent {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 13px;
+        }
+
+        .output-timestamp {
+            font-size: 11px;
+            opacity: 0.6;
+        }
+
+        .output-status {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--attention);
+        }
+
+        .status-approved {
+            background: rgba(22, 163, 74, 0.2);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(220, 38, 38, 0.2);
+            color: var(--critical);
+        }
+
+        .output-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .output-task {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .output-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-approve,
+        .btn-reject {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-reject {
+            background: var(--critical);
+            color: white;
+        }
+
+        .btn-reject:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-approve:disabled,
+        .btn-reject:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .output-empty {
+            text-align: center;
+            padding: 24px;
+            opacity: 0.6;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -593,6 +761,20 @@
                 <!-- Dynamic content loaded here -->
             </div>
 
+            <!-- OUTPUT APPROVAL PANEL -->
+            <div class="output-panel" id="outputPanel" style="display: none;">
+                <div class="output-header">
+                    <span>Agent Outputs</span>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span class="output-count" id="outputCount">0</span>
+                        <button class="console-clear" onclick="clearOutputs()">Clear</button>
+                    </div>
+                </div>
+                <div class="outputs-list" id="outputsList">
+                    <div class="output-empty">No outputs yet. Run agents to see results here.</div>
+                </div>
+            </div>
+
             <!-- CONSOLE -->
             <div class="console-section">
                 <div class="console-header">
@@ -612,13 +794,125 @@
         let allAgents = [];
         let filteredAgents = [];
         let currentFilter = '';
+        let outputs = [];
 
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             loadTheme();
             discoverAgents();
             renderModule();
+            restoreOutputs();
         });
+
+        // Output Management
+        function addOutput(agentId, agentName, task, content) {
+            const output = {
+                id: `output-${Date.now()}-${Math.random()}`,
+                agentId,
+                agentName,
+                task,
+                content,
+                status: 'pending',
+                timestamp: new Date().toLocaleTimeString(),
+                createdAt: Date.now()
+            };
+
+            outputs.unshift(output);
+            renderOutputs();
+            saveOutputs();
+            logConsole('Output', `${agentName} generated output (awaiting approval)`, 'info');
+
+            if (outputs.length > 0) {
+                document.getElementById('outputPanel').style.display = 'block';
+            }
+        }
+
+        function approveOutput(outputId) {
+            const output = outputs.find(o => o.id === outputId);
+            if (output) {
+                output.status = 'approved';
+                renderOutputs();
+                saveOutputs();
+                logConsole('Approval', `${output.agentName} output APPROVED`, 'success');
+            }
+        }
+
+        function rejectOutput(outputId) {
+            const output = outputs.find(o => o.id === outputId);
+            if (output) {
+                output.status = 'rejected';
+                renderOutputs();
+                saveOutputs();
+                logConsole('Approval', `${output.agentName} output REJECTED`, 'error');
+            }
+        }
+
+        function renderOutputs() {
+            const panel = document.getElementById('outputPanel');
+            const list = document.getElementById('outputsList');
+            const count = document.getElementById('outputCount');
+
+            if (outputs.length === 0) {
+                list.innerHTML = '<div class="output-empty">No outputs yet. Run agents to see results here.</div>';
+                count.textContent = '0';
+                return;
+            }
+
+            count.textContent = outputs.length;
+
+            list.innerHTML = outputs.map(output => `
+                <div class="output-item ${output.status}">
+                    <div class="output-meta">
+                        <div>
+                            <div class="output-agent">🤖 ${output.agentName}</div>
+                            <div class="output-timestamp">${output.timestamp}</div>
+                        </div>
+                        <span class="output-status status-${output.status}">${output.status}</span>
+                    </div>
+                    <div class="output-task">📋 Task: ${output.task}</div>
+                    <div class="output-content">${output.content}</div>
+                    ${output.status === 'pending' ? `
+                        <div class="output-actions">
+                            <button class="btn-approve" onclick="approveOutput('${output.id}')">✓ Approve</button>
+                            <button class="btn-reject" onclick="rejectOutput('${output.id}')">✗ Reject</button>
+                        </div>
+                    ` : `
+                        <div class="output-actions">
+                            <button class="btn-approve" disabled>✓ Approved</button>
+                        </div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function clearOutputs() {
+            if (confirm('Clear all outputs?')) {
+                outputs = [];
+                renderOutputs();
+                saveOutputs();
+                logConsole('System', 'All outputs cleared', 'info');
+                document.getElementById('outputPanel').style.display = 'none';
+            }
+        }
+
+        function saveOutputs() {
+            localStorage.setItem('outputs', JSON.stringify(outputs));
+        }
+
+        function restoreOutputs() {
+            const saved = localStorage.getItem('outputs');
+            if (saved) {
+                try {
+                    outputs = JSON.parse(saved);
+                    renderOutputs();
+                    if (outputs.length > 0) {
+                        document.getElementById('outputPanel').style.display = 'block';
+                    }
+                } catch (e) {
+                    console.error('Failed to restore outputs', e);
+                }
+            }
+        }
 
         // Theme Management
         function loadTheme() {
@@ -992,10 +1286,60 @@
 
             logConsole('Execution', `Running ${module} module with ${selectedAgents.size} agents`, 'info');
 
-            selectedAgents.forEach(agentId => {
+            let taskDescription = '';
+            switch(module) {
+                case 'website':
+                    taskDescription = document.getElementById('agencyName')?.value || 'Website Creation';
+                    break;
+                case 'social':
+                    taskDescription = document.querySelector('[placeholder="What to post about?"]')?.value || 'Social Media Content';
+                    break;
+                case 'brand':
+                    taskDescription = document.querySelector('[placeholder="Your brand name"]')?.value || 'Brand Assets';
+                    break;
+                case 'email':
+                    taskDescription = document.querySelector('[placeholder="Email subject line"]')?.value || 'Email Campaign';
+                    break;
+            }
+
+            // Simulate agent execution with delays
+            selectedAgents.forEach((agentId, index) => {
                 const agent = allAgents.find(a => a.id === agentId);
-                logConsole(agent?.name, `Processing ${module} request...`, 'success');
+                if (!agent) return;
+
+                setTimeout(() => {
+                    logConsole(agent.name, `Processing ${module} request...`, 'info');
+
+                    // Generate realistic output based on agent type
+                    const output = generateAgentOutput(agent, module, taskDescription);
+
+                    // Add output after a short delay (simulating processing)
+                    setTimeout(() => {
+                        addOutput(agent.id, agent.name, taskDescription, output);
+                    }, 500);
+                }, index * 800);
             });
+        }
+
+        function generateAgentOutput(agent, module, task) {
+            const outputs = {
+                'Lead Gen': `✓ Identified 12 qualified leads\n• TechCorp Inc - Enterprise tier\n• StartupXYZ - Growth stage\n• MegaRetail Corp - Volume buyer\n\nTotal lead value: $450K ARR potential`,
+                'Lead Qualifier': `✓ Qualification Score Report:\n• 8 leads qualified (Grade A)\n• 3 leads qualified (Grade B)\n• 1 lead rejected (low budget)\n\nConversion probability: 65%`,
+                'Sales Pitch': `✓ Sales pitch generated:\n"Transform your operations with our proven automation solution. Companies like you save 300+ hours annually. Want to see a demo?"`,
+                'Proposal Generator': `✓ Professional proposal created\n• Custom pricing: $45K/year\n• Implementation timeline: 2 weeks\n• ROI projection: 3.2x in first year\n• Includes 6-month support`,
+                'Objection Handler': `✓ Objection handling script ready:\n\nObjection: "Too expensive"\nResponse: "Let's look at your time costs. At $75/hr, you'll break even in just 150 hours of saved work."`,
+                'Deal Closer': `✓ Deal closure strategy:\n• Schedule follow-up: Tomorrow 2pm\n• Send contract: Tonight\n• Expected close date: Friday\n• Final incentive: 10% early-bird bonus`,
+                'Content Creator': `✓ Blog post outline generated:\n1. Problem statement\n2. Your solution\n3. Case study example\n4. CTA section\n\nEstimated: 1200 words, 5-min read`,
+                'Copywriter': `✓ Email copy variations created:\nSubject: "3 Ways [Company] Saves 300+ Hours (+ ROI Breakdown)"\nBody: Personalized, emotion-driven, benefit-focused`,
+                'SEO Optimizer': `✓ SEO recommendations:\n• Add 8 target keywords\n• Improve meta descriptions\n• Restructure headers\n• Add internal links (12 opportunities)\n\nExpected ranking improvement: +25%`,
+                'Social Media Manager': `✓ Social media post created:\n📱 Twitter: 140 chars, 3 hashtags\n📱 LinkedIn: Professional version\n📱 Instagram: Visual-first approach\n\nScheduled: Tomorrow 9am`,
+                'Email Marketer': `✓ Email campaign ready:\n• Segment: 5,400 prospects\n• Send time: Optimal (Tuesday 10am)\n• Subject line A/B test ready\n• Estimated open rate: 28%`,
+                'Workflow Optimizer': `✓ Process bottlenecks identified:\n• Step 3: 40% time waste\n• Integration gap: $2K/month cost\n• Recommendation: Automation here saves $24K/year`,
+                'Task Scheduler': `✓ Workflow scheduled:\n• Task 1: Due tomorrow 9am\n• Task 2: Due in 3 days\n• Task 3: Due in 1 week\n• Dependencies configured`,
+                'Data Analyst': `✓ Analytics report generated:\n• 23% conversion increase\n• $120K additional revenue\n• Customer acquisition cost: $340\n• Lifetime value: $8,900`
+            };
+
+            return outputs[agent.name] || `✓ ${agent.name} processed "${task}"\n\nOutput generated and ready for review.`;
         }
 
         // Console logging
@@ -1018,6 +1362,7 @@
             const config = {
                 selectedAgents: Array.from(selectedAgents),
                 allAgents: allAgents,
+                outputs: outputs,
                 timestamp: new Date().toISOString()
             };
             const json = JSON.stringify(config, null, 2);
@@ -1027,7 +1372,7 @@
             a.href = url;
             a.download = `automation-hub-${Date.now()}.json`;
             a.click();
-            logConsole('Export', 'Configuration exported', 'success');
+            logConsole('Export', `Configuration exported (${outputs.length} outputs included)`, 'success');
         }
 
         function importConfig() {
@@ -1041,7 +1386,14 @@
                     try {
                         const config = JSON.parse(event.target.result);
                         selectedAgents = new Set(config.selectedAgents);
-                        logConsole('Import', `Loaded ${selectedAgents.size} agents`, 'success');
+                        if (config.outputs) {
+                            outputs = config.outputs;
+                            renderOutputs();
+                            if (outputs.length > 0) {
+                                document.getElementById('outputPanel').style.display = 'block';
+                            }
+                        }
+                        logConsole('Import', `Loaded ${selectedAgents.size} agents (${config.outputs?.length || 0} outputs)`, 'success');
                         renderAgentCards();
                     } catch (err) {
                         logConsole('Import', 'Failed to import configuration', 'error');
