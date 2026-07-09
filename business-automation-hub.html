@@ -483,6 +483,71 @@
             grid-column: 1 / -1;
         }
 
+        .client-panel {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .client-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .client-info {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .client-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .client-form {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
         @media (max-width: 1200px) {
             .content {
                 grid-template-columns: 1fr;
@@ -500,6 +565,7 @@
                 <button class="nav-btn active" onclick="switchView('dashboard')">📊 Overview</button>
                 <button class="nav-btn" onclick="switchView('execution')">⚙️ Execution</button>
                 <button class="nav-btn" onclick="switchView('approvals')">✅ Approvals</button>
+                <button class="nav-btn" onclick="switchView('clients')">👥 Clients</button>
             </div>
 
             <div class="nav-section">
@@ -531,6 +597,8 @@
         let activities = [];
         let currentView = 'dashboard';
         let selectedAgents = new Set();
+        let clients = [];
+        let selectedClient = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             renderView();
@@ -581,6 +649,8 @@
                 content.innerHTML = renderExecution();
             } else if (currentView === 'approvals') {
                 content.innerHTML = renderApprovals();
+            } else if (currentView === 'clients') {
+                content.innerHTML = renderClients();
             }
         }
 
@@ -653,6 +723,32 @@
                 <div class="panel full-width">
                     <div class="panel-title">⚙️ Task Execution</div>
 
+                    ${selectedClient ? `
+                        <div class="client-panel">
+                            <div class="client-name">📌 ${selectedClient.name}</div>
+                            <div class="client-info">🏢 ${selectedClient.company}</div>
+                            <div class="client-info">💼 ${selectedClient.designation}</div>
+                            <div class="client-info">📧 ${selectedClient.email}</div>
+                            <div class="client-info">📱 ${selectedClient.phone}</div>
+                            <div class="client-info">📦 Products: ${selectedClient.products}</div>
+                            <div class="client-actions">
+                                <a class="action-btn" href="tel:${selectedClient.phone}">📞 Call</a>
+                                <a class="action-btn" href="mailto:${selectedClient.email}">📧 Email</a>
+                                <a class="action-btn" href="https://wa.me/${selectedClient.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
+                                <a class="action-btn" href="https://www.linkedin.com/search/results/people/?keywords=${selectedClient.name}" target="_blank">🔗 LinkedIn</a>
+                            </div>
+                            <button class="btn btn-secondary" onclick="selectedClient = null; renderView()" style="margin-top: 12px;">Change Client</button>
+                        </div>
+                    ` : `
+                        <div class="form-group">
+                            <div class="form-label">Select Client</div>
+                            <select class="form-select" onchange="selectClient(this.value)">
+                                <option value="">-- New or No Client --</option>
+                                ${clients.map(c => `<option value="${c.id}">${c.name} - ${c.company} (${c.designation})</option>`).join('')}
+                            </select>
+                        </div>
+                    `}
+
                     <div class="form-group">
                         <div class="form-label">Task Name</div>
                         <input type="text" class="form-input" id="taskName" placeholder="e.g., Lead Generation Campaign">
@@ -712,16 +808,36 @@
                     <div class="panel-title">✅ Output Approval Queue</div>
 
                     ${pending.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No pending approvals</div>' :
-                      pending.map(output => `
-                        <div class="output-item">
-                            <div class="output-agent">🤖 ${output.agent}</div>
-                            <div class="output-content">${output.content}</div>
-                            <div class="output-actions">
-                                <button class="btn-small btn-approve" onclick="approveOutput('${output.id}')">✓ Approve</button>
-                                <button class="btn-small btn-reject" onclick="rejectOutput('${output.id}')">✗ Reject</button>
+                      pending.map(output => {
+                        const task = tasks.find(t => t.id === output.taskId);
+                        const client = task && clients.find(c => c.id === task.clientId);
+                        return `
+                        <div style="margin-bottom: 16px;">
+                            ${client ? `
+                                <div class="client-panel">
+                                    <div class="client-name">${client.name}</div>
+                                    <div class="client-info">🏢 ${client.company}</div>
+                                    <div class="client-info">💼 ${client.designation}</div>
+                                    <div class="client-info">📧 ${client.email} | 📱 ${client.phone}</div>
+                                    <div class="client-info">📦 ${client.products}</div>
+                                    <div class="client-actions">
+                                        <a class="action-btn" href="tel:${client.phone}">📞 Call</a>
+                                        <a class="action-btn" href="mailto:${client.email}">📧 Email</a>
+                                        <a class="action-btn" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
+                                        <a class="action-btn" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LinkedIn</a>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="output-item">
+                                <div class="output-agent">🤖 ${output.agent}</div>
+                                <div class="output-content">${output.content}</div>
+                                <div class="output-actions">
+                                    <button class="btn-small btn-approve" onclick="approveOutput('${output.id}')">✓ Approve</button>
+                                    <button class="btn-small btn-reject" onclick="rejectOutput('${output.id}')">✗ Reject</button>
+                                </div>
                             </div>
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
 
                 <div class="panel">
@@ -748,6 +864,125 @@
                     </div>
                 </div>
             `;
+        }
+
+        function renderClients() {
+            return `
+                <div class="panel full-width">
+                    <div class="panel-title">👥 Client Management</div>
+
+                    <div class="section-title">Add New Client</div>
+                    <div class="client-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="form-label">Name</div>
+                                <input type="text" class="form-input" id="clientName" placeholder="Client Name">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Designation</div>
+                                <input type="text" class="form-input" id="clientDesignation" placeholder="e.g., CEO, Manager">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="form-label">Company</div>
+                                <input type="text" class="form-input" id="clientCompany" placeholder="Company Name">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Products/Services</div>
+                                <input type="text" class="form-input" id="clientProducts" placeholder="e.g., Software, Consulting">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <div class="form-label">Email</div>
+                                <input type="email" class="form-input" id="clientEmail" placeholder="name@company.com">
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label">Phone</div>
+                                <input type="tel" class="form-input" id="clientPhone" placeholder="+1234567890">
+                            </div>
+                        </div>
+                        <button class="btn" onclick="addClient()">➕ Add Client</button>
+                    </div>
+
+                    <div class="section-title">Saved Clients (${clients.length})</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
+                        ${clients.length === 0 ? '<div style="opacity: 0.6; font-size: 12px; grid-column: 1/-1;">No clients yet</div>' :
+                          clients.map(client => `
+                            <div class="client-form">
+                                <div style="font-weight: 600; color: var(--primary); margin-bottom: 8px;">${client.name}</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">🏢 ${client.company}</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">💼 ${client.designation}</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">📦 ${client.products}</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 8px;">📧 ${client.email}</div>
+                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 12px;">📱 ${client.phone}</div>
+                                <div style="display: flex; gap: 6px;">
+                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="tel:${client.phone}">📞 Call</a>
+                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="mailto:${client.email}">📧 Email</a>
+                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
+                                </div>
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: 8px; padding: 6px; font-size: 11px;" onclick="deleteClient('${client.id}')">🗑️ Delete</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addClient() {
+            const name = document.getElementById('clientName').value;
+            const designation = document.getElementById('clientDesignation').value;
+            const company = document.getElementById('clientCompany').value;
+            const products = document.getElementById('clientProducts').value;
+            const email = document.getElementById('clientEmail').value;
+            const phone = document.getElementById('clientPhone').value;
+
+            if (!name || !email || !phone) {
+                alert('Please fill in Name, Email, and Phone');
+                return;
+            }
+
+            const client = {
+                id: `client-${Date.now()}`,
+                name,
+                designation,
+                company,
+                products,
+                email,
+                phone,
+                createdAt: new Date().toLocaleTimeString()
+            };
+
+            clients.push(client);
+            log(`Client added: ${name} from ${company}`);
+
+            // Clear form
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientDesignation').value = '';
+            document.getElementById('clientCompany').value = '';
+            document.getElementById('clientProducts').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientPhone').value = '';
+
+            renderView();
+        }
+
+        function deleteClient(clientId) {
+            if (confirm('Delete this client?')) {
+                clients = clients.filter(c => c.id !== clientId);
+                log('Client deleted');
+                renderView();
+            }
+        }
+
+        function selectClient(clientId) {
+            if (clientId) {
+                selectedClient = clients.find(c => c.id === clientId);
+            } else {
+                selectedClient = null;
+            }
+            renderView();
         }
 
         function toggleAgent(agentId) {
@@ -778,11 +1013,12 @@
                 agents: agentList,
                 status: 'running',
                 currentAgent: 0,
+                clientId: selectedClient?.id || null,
                 createdAt: new Date().toLocaleTimeString()
             };
 
             tasks.push(task);
-            log(`Task "${name}" started with ${agentList.length} agents`);
+            log(`Task "${name}" started with ${agentList.length} agents${selectedClient ? ` for ${selectedClient.name}` : ''}`);
 
             // Simulate agent execution
             executeAgentPipeline(task);
