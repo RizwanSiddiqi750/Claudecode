@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Automation Hub - All-in-One Platform</title>
+    <title>Business Automation Hub - Dynamic Agent Platform</title>
     <style>
         :root {
             --primary: #0b5f7f;
@@ -66,7 +66,7 @@
 
         .wrapper {
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 280px 1fr;
             min-height: 100vh;
             gap: 0;
         }
@@ -99,80 +99,71 @@
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--text);
-            opacity: 0.7;
-            margin-bottom: 8px;
             letter-spacing: 0.5px;
+            color: var(--text);
+            opacity: 0.6;
+            margin-bottom: 8px;
         }
 
-        .nav-items {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .nav-item {
+        .nav-btn {
+            width: 100%;
             padding: 10px 12px;
-            border-radius: 4px;
+            margin-bottom: 6px;
             background: transparent;
             border: 1px solid transparent;
-            cursor: pointer;
-            font-size: 13px;
             color: var(--text);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: left;
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
         }
 
-        .nav-item:hover {
+        .nav-btn:hover {
             background: var(--bg);
             border-color: var(--border);
         }
 
-        .nav-item.active {
+        .nav-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
 
-        .nav-item-icon {
-            font-size: 16px;
-        }
-
-        .sidebar-footer {
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-            padding-top: 16px;
-        }
-
         .theme-selector {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.6;
             margin-bottom: 8px;
         }
 
-        .settings-btn {
-            width: 100%;
-            padding: 10px 12px;
+        .theme-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+
+        .theme-btn {
+            padding: 8px 10px;
             border: 1px solid var(--border);
-            background: var(--surface);
+            background: transparent;
             color: var(--text);
+            font-size: 11px;
             border-radius: 4px;
-            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .settings-btn:hover {
-            background: var(--bg);
+        .theme-btn.active {
+            background: var(--primary);
+            color: white;
             border-color: var(--primary);
         }
 
@@ -180,7 +171,6 @@
         .main {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         .header {
@@ -193,9 +183,8 @@
         }
 
         .header-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
-            color: var(--text);
         }
 
         .header-controls {
@@ -205,264 +194,331 @@
 
         .btn {
             padding: 8px 16px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            border-radius: 4px;
-            cursor: pointer;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
             font-size: 13px;
-            font-weight: 500;
+            cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .btn-primary:hover {
             opacity: 0.9;
         }
 
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg);
+        }
+
+        /* CONTENT AREA */
         .content {
             flex: 1;
             overflow-y: auto;
             padding: 24px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
         }
 
-        /* PANELS */
-        .panel {
+        .module-header {
+            margin-bottom: 24px;
+        }
+
+        .module-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .module-description {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* AGENT DISCOVERY */
+        .agent-discovery {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 16px;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 12px;
+        .discovery-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 16px;
         }
 
-        .panel-desc {
-            font-size: 12px;
+        .discovery-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .agent-count {
+            font-size: 13px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .search-container {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
             color: var(--text);
-            opacity: 0.7;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            font-size: 14px;
         }
 
-        /* AGENTS LIST */
+        .search-input::placeholder {
+            opacity: 0.5;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag-btn {
+            padding: 6px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
+        }
+
+        .tag-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         .agents-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .agent-btn {
-            padding: 8px;
-            border: 2px solid var(--border);
-            background: transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-            font-size: 11px;
-            color: var(--text);
-        }
-
-        .agent-btn:hover {
-            border-color: var(--primary);
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 12px;
             background: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
         }
 
-        .agent-btn.selected {
-            border-color: var(--accent);
-            background: rgba(217, 119, 6, 0.1);
-            color: var(--accent);
-            font-weight: 600;
+        .agent-card {
+            padding: 12px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .agent-icon {
-            font-size: 24px;
-            margin-bottom: 4px;
+        .agent-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .agent-card.selected {
+            border-color: var(--primary);
+            background: rgba(11, 95, 127, 0.1);
         }
 
         .agent-name {
             font-weight: 600;
+            font-size: 13px;
         }
 
-        .agent-role {
-            font-size: 10px;
+        .agent-category {
+            font-size: 11px;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+
+        .agent-description {
+            font-size: 12px;
             opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        .agent-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            margin-top: auto;
         }
 
         /* SELECTED AGENTS */
-        .selected-display {
-            background: var(--bg);
+        .selected-agents {
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 8px;
-            min-height: 32px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            align-items: flex-start;
-            font-size: 11px;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .selected-title {
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 12px;
         }
 
+        .selected-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         .agent-tag {
-            background: var(--primary);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 3px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 500;
         }
 
         .agent-tag .remove {
             cursor: pointer;
-            opacity: 0.7;
+            font-weight: bold;
+            margin-left: 4px;
         }
 
-        .agent-tag .remove:hover {
-            opacity: 1;
+        /* MODULE CONTENT */
+        .module-form {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
-        /* FORM */
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .form-label {
             display: block;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text);
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        input,
-        textarea,
-        select {
+        .form-input,
+        .form-textarea,
+        .form-select {
             width: 100%;
-            padding: 8px 10px;
+            padding: 10px;
             border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 12px;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(11, 95, 127, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .form-actions button {
-            flex: 1;
-            padding: 8px 12px;
-        }
-
-        /* PREVIEW */
-        .preview-area {
             background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 12px;
-            min-height: 150px;
-            font-size: 12px;
             color: var(--text);
-            line-height: 1.6;
-            word-break: break-word;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .console-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .console-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-clear {
+            font-size: 11px;
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         .console {
             background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 8px;
-            min-height: 120px;
-            max-height: 200px;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            max-height: 300px;
             overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: var(--text);
+            line-height: 1.4;
         }
 
         .console-line {
-            padding: 2px 0;
-            display: flex;
-            gap: 8px;
+            margin-bottom: 4px;
+            padding: 4px 0;
+            border-left: 2px solid transparent;
+            padding-left: 8px;
         }
 
-        .console-time {
-            color: var(--text);
-            opacity: 0.5;
-            min-width: 50px;
+        .console-line.info {
+            color: var(--primary);
+            border-left-color: var(--primary);
         }
 
-        .console-msg {
-            flex: 1;
-        }
-
-        .console-msg.success {
+        .console-line.success {
             color: var(--success);
+            border-left-color: var(--success);
         }
 
-        .console-msg.error {
+        .console-line.error {
             color: var(--critical);
+            border-left-color: var(--critical);
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 24px 16px;
-            color: var(--text);
+        .console-line.warning {
+            color: var(--attention);
+            border-left-color: var(--attention);
+        }
+
+        .console-timestamp {
             opacity: 0.5;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
             .wrapper {
                 grid-template-columns: 1fr;
             }
@@ -471,381 +527,103 @@
                 display: none;
             }
         }
+
+        .loading {
+            text-align: center;
+            padding: 24px;
+            opacity: 0.7;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <!-- SIDEBAR -->
         <div class="sidebar">
-            <div class="logo">
-                <span>⚙️</span>
-                <span>BizHub</span>
+            <div class="logo">🤖 Automation Hub</div>
+
+            <div class="nav-section">
+                <div class="nav-label">Modules</div>
+                <button class="nav-btn active" onclick="switchModule('agents')">🤖 AI Agents</button>
+                <button class="nav-btn" onclick="switchModule('website')">🌐 Website Builder</button>
+                <button class="nav-btn" onclick="switchModule('social')">📱 Social Media</button>
+                <button class="nav-btn" onclick="switchModule('brand')">🎨 Brand Tools</button>
+                <button class="nav-btn" onclick="switchModule('email')">✉️ Email Campaigns</button>
             </div>
 
             <div class="nav-section">
                 <div class="nav-label">Tools</div>
-                <div class="nav-items">
-                    <div class="nav-item active" onclick="switchModule('agents')">
-                        <span class="nav-item-icon">🤖</span>
-                        <span>AI Agents</span>
-                    </div>
-                    <div class="nav-item" onclick="switchModule('website')">
-                        <span class="nav-item-icon">🌐</span>
-                        <span>Website Builder</span>
-                    </div>
-                    <div class="nav-item" onclick="switchModule('social')">
-                        <span class="nav-item-icon">📱</span>
-                        <span>Social Media Posts</span>
-                    </div>
-                    <div class="nav-item" onclick="switchModule('brand')">
-                        <span class="nav-item-icon">🎨</span>
-                        <span>Brand Tools</span>
-                    </div>
-                    <div class="nav-item" onclick="switchModule('email')">
-                        <span class="nav-item-icon">✉️</span>
-                        <span>Email Campaigns</span>
-                    </div>
-                </div>
+                <button class="nav-btn btn-secondary" onclick="exportConfig()">📥 Export</button>
+                <button class="nav-btn btn-secondary" onclick="importConfig()">📤 Import</button>
             </div>
 
-            <div class="sidebar-footer">
-                <label class="form-label">Theme</label>
-                <select class="theme-selector" onchange="setTheme(this.value)">
-                    <option value="light">☀️ Light</option>
-                    <option value="dark">🌙 Dark</option>
-                    <option value="auto">🔄 Auto</option>
-                </select>
-                <button class="settings-btn" onclick="showSettings()">⚙️ Settings</button>
+            <div class="theme-selector">
+                <div class="theme-label">Theme</div>
+                <div class="theme-buttons">
+                    <button class="theme-btn active" onclick="setTheme('light')">☀️</button>
+                    <button class="theme-btn" onclick="setTheme('dark')">🌙</button>
+                    <button class="theme-btn" onclick="setTheme('auto')">🔄</button>
+                </div>
             </div>
         </div>
 
-        <!-- MAIN -->
+        <!-- MAIN CONTENT -->
         <div class="main">
             <div class="header">
-                <div class="header-title" id="moduleTitle">🤖 AI Agent Studio</div>
+                <div class="header-title" id="headerTitle">AI Agents Discovery</div>
                 <div class="header-controls">
-                    <button class="btn" onclick="exportConfig()">↓ Export</button>
-                    <button class="btn" onclick="importConfig()">↑ Import</button>
-                    <button class="btn btn-primary" onclick="executeCurrent()">▶️ Execute</button>
+                    <button class="btn" onclick="executeCurrent()">▶ Execute</button>
                 </div>
             </div>
 
-            <div class="content" id="content"></div>
+            <div class="content" id="content">
+                <!-- Dynamic content loaded here -->
+            </div>
+
+            <!-- CONSOLE -->
+            <div class="console-section">
+                <div class="console-header">
+                    <span>Execution Console</span>
+                    <button class="console-clear" onclick="clearConsole()">Clear</button>
+                </div>
+                <div class="console" id="console"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const agents = [
-            { id: 'lead-gen', name: 'Lead Gen', icon: '📍', role: 'Research' },
-            { id: 'qualification', name: 'Qualify', icon: '✅', role: 'Filter' },
-            { id: 'pitch', name: 'Pitch', icon: '💬', role: 'Outreach' },
-            { id: 'proposal', name: 'Proposal', icon: '📄', role: 'Docs' },
-            { id: 'objection', name: 'Objections', icon: '⚔️', role: 'Handle' },
-            { id: 'closing', name: 'Closing', icon: '🎉', role: 'Deal' }
-        ];
-
-        let selectedAgents = [];
+        // Global State
+        let agents = [];
+        let selectedAgents = new Set();
         let currentModule = 'agents';
-        let consoleLines = [];
+        let allAgents = [];
+        let filteredAgents = [];
+        let currentFilter = '';
 
-        const modules = {
-            agents: {
-                title: '🤖 AI Agent Studio',
-                render: renderAgentsModule
-            },
-            website: {
-                title: '🌐 Website Builder',
-                render: renderWebsiteModule
-            },
-            social: {
-                title: '📱 Social Media Posts',
-                render: renderSocialModule
-            },
-            brand: {
-                title: '🎨 Brand Tools',
-                render: renderBrandModule
-            },
-            email: {
-                title: '✉️ Email Campaigns',
-                render: renderEmailModule
-            }
-        };
-
-        function switchModule(module) {
-            currentModule = module;
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item').classList.add('active');
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            discoverAgents();
             renderModule();
-        }
+        });
 
-        function renderModule() {
-            document.getElementById('moduleTitle').textContent = modules[currentModule].title;
-            modules[currentModule].render();
-        }
-
-        function renderAgentsModule() {
-            document.getElementById('content').innerHTML = `
-                <div class="panel">
-                    <div class="panel-title">📋 Available Agents</div>
-                    <div class="panel-desc">Select agents for your agency</div>
-                    <div class="agents-grid" id="agentsGrid"></div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🎯 Create Agency</div>
-                    <div class="form-group">
-                        <label class="form-label">Agency Name</label>
-                        <input type="text" id="agencyName" placeholder="e.g., Enterprise Sales">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Purpose</label>
-                        <textarea id="agencyPurpose" placeholder="What is this agency for?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Selected Agents</label>
-                        <div class="selected-display" id="selectedDisplay">No agents selected</div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn" onclick="clearAgents()">Clear</button>
-                        <button class="btn btn-primary" onclick="createAgency()">Create</button>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">📊 Console Output</div>
-                    <div class="console" id="console"></div>
-                </div>
-            `;
-
-            renderAgentsList();
-        }
-
-        function renderAgentsList() {
-            const grid = document.getElementById('agentsGrid');
-            grid.innerHTML = agents.map(agent => `
-                <button class="agent-btn ${selectedAgents.includes(agent.id) ? 'selected' : ''}"
-                        onclick="toggleAgent('${agent.id}')">
-                    <div class="agent-icon">${agent.icon}</div>
-                    <div class="agent-name">${agent.name}</div>
-                    <div class="agent-role">${agent.role}</div>
-                </button>
-            `).join('');
-
-            updateSelectedDisplay();
-        }
-
-        function toggleAgent(id) {
-            selectedAgents = selectedAgents.includes(id)
-                ? selectedAgents.filter(a => a !== id)
-                : [...selectedAgents, id];
-            renderAgentsList();
-        }
-
-        function updateSelectedDisplay() {
-            const display = document.getElementById('selectedDisplay');
-            if (selectedAgents.length === 0) {
-                display.textContent = 'No agents selected';
-            } else {
-                display.innerHTML = selectedAgents.map(id => {
-                    const agent = agents.find(a => a.id === id);
-                    return `<span class="agent-tag">${agent.icon} ${agent.name}<span class="remove" onclick="toggleAgent('${id}')">×</span></span>`;
-                }).join('');
-            }
-        }
-
-        function clearAgents() {
-            selectedAgents = [];
-            renderAgentsList();
-        }
-
-        function createAgency() {
-            const name = document.getElementById('agencyName').value;
-            if (!name || selectedAgents.length === 0) {
-                alert('Enter name and select agents');
-                return;
-            }
-            logConsole('SYSTEM', `✓ Agency "${name}" created with ${selectedAgents.length} agents`, 'success');
-            document.getElementById('agencyName').value = '';
-            document.getElementById('agencyPurpose').value = '';
-            clearAgents();
-        }
-
-        function renderWebsiteModule() {
-            document.getElementById('content').innerHTML = `
-                <div class="panel">
-                    <div class="panel-title">🎨 Website Design</div>
-                    <div class="form-group">
-                        <label class="form-label">Website Name</label>
-                        <input type="text" placeholder="My Awesome Site">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea placeholder="What is your website about?"></textarea>
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;">Design Website</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🎯 AI Agents for Content</div>
-                    <div class="agents-grid" id="websiteAgentsGrid"></div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">👁️ Preview</div>
-                    <div class="preview-area">Website preview will appear here...</div>
-                </div>
-            `;
-            renderAgentsList2('websiteAgentsGrid');
-        }
-
-        function renderSocialModule() {
-            document.getElementById('content').innerHTML = `
-                <div class="panel">
-                    <div class="panel-title">📝 Social Post Generator</div>
-                    <div class="form-group">
-                        <label class="form-label">Topic/Product</label>
-                        <input type="text" placeholder="What to promote?">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Platform</label>
-                        <select>
-                            <option>Twitter</option>
-                            <option>LinkedIn</option>
-                            <option>Instagram</option>
-                            <option>Facebook</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;">Generate Post</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🤖 AI Support Agents</div>
-                    <div class="agents-grid" id="socialAgentsGrid"></div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">📱 Post Preview</div>
-                    <div class="preview-area">Your social post will appear here...</div>
-                </div>
-            `;
-            renderAgentsList2('socialAgentsGrid');
-        }
-
-        function renderBrandModule() {
-            document.getElementById('content').innerHTML = `
-                <div class="panel">
-                    <div class="panel-title">🎨 Brand Tools</div>
-                    <div class="form-group">
-                        <label class="form-label">Brand Name</label>
-                        <input type="text" placeholder="Your brand name">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Brand Values</label>
-                        <textarea placeholder="What does your brand stand for?"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Tool Type</label>
-                        <select>
-                            <option>Logo Design</option>
-                            <option>Color Palette</option>
-                            <option>Brand Guidelines</option>
-                            <option>Promotion Campaign</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;">Generate Brand Assets</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🤖 Brand AI Agents</div>
-                    <div class="agents-grid" id="brandAgentsGrid"></div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🎯 Preview</div>
-                    <div class="preview-area">Brand assets will appear here...</div>
-                </div>
-            `;
-            renderAgentsList2('brandAgentsGrid');
-        }
-
-        function renderEmailModule() {
-            document.getElementById('content').innerHTML = `
-                <div class="panel">
-                    <div class="panel-title">✉️ Email Campaign</div>
-                    <div class="form-group">
-                        <label class="form-label">Email Subject</label>
-                        <input type="text" placeholder="Grab attention here">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Target Audience</label>
-                        <input type="text" placeholder="Who are you emailing?">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email Body</label>
-                        <textarea placeholder="Your email content..."></textarea>
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%;">Generate Email</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">🤖 Email AI Agents</div>
-                    <div class="agents-grid" id="emailAgentsGrid"></div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">📧 Preview</div>
-                    <div class="preview-area">Email preview will appear here...</div>
-                </div>
-            `;
-            renderAgentsList2('emailAgentsGrid');
-        }
-
-        function renderAgentsList2(elementId) {
-            const grid = document.getElementById(elementId);
-            if (!grid) return;
-            grid.innerHTML = agents.map(agent => `
-                <button class="agent-btn ${selectedAgents.includes(agent.id) ? 'selected' : ''}"
-                        onclick="toggleAgent('${agent.id}')">
-                    <div class="agent-icon">${agent.icon}</div>
-                    <div class="agent-name">${agent.name}</div>
-                    <div class="agent-role">${agent.role}</div>
-                </button>
-            `).join('');
-        }
-
-        function executeCurrent() {
-            if (selectedAgents.length === 0) {
-                alert('Select agents first');
-                return;
-            }
-            logConsole('SYSTEM', `Executing with ${selectedAgents.length} agents...`);
-            selectedAgents.forEach((id, i) => {
-                const agent = agents.find(a => a.id === id);
-                setTimeout(() => {
-                    logConsole(agent.name, 'Processing...', 'info');
-                    setTimeout(() => {
-                        logConsole(agent.name, '✓ Complete', 'success');
-                    }, 800);
-                }, i * 1000);
-            });
-        }
-
-        function logConsole(agent, msg, type = 'info') {
-            const time = new Date().toLocaleTimeString();
-            const line = `[${time}] ${agent}: ${msg}`;
-            consoleLines.push({ time, agent, msg, type });
-
-            const console = document.getElementById('console');
-            if (console) {
-                const div = document.createElement('div');
-                div.className = `console-line`;
-                div.innerHTML = `
-                    <span class="console-time">${time}</span>
-                    <span class="console-msg ${type}">${agent}: ${msg}</span>
-                `;
-                console.appendChild(div);
-                console.scrollTop = console.scrollHeight;
-            }
+        // Theme Management
+        function loadTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            setTheme(saved);
         }
 
         function setTheme(theme) {
@@ -855,25 +633,424 @@
                 document.documentElement.setAttribute('data-theme', theme);
             }
             localStorage.setItem('theme', theme);
+
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[onclick="setTheme('${theme}')"]`)?.classList.add('active');
         }
 
+        // Agent Discovery - Auto-discover from 21st.dev
+        async function discoverAgents() {
+            logConsole('System', 'Discovering agents from Agency Agents...', 'info');
+
+            try {
+                // Try to fetch from 21st.dev API
+                const response = await fetch('https://21st.dev/api/agents', {
+                    headers: { 'Accept': 'application/json' }
+                }).catch(() => null);
+
+                if (response?.ok) {
+                    allAgents = await response.json();
+                    logConsole('System', `Discovered ${allAgents.length} agents from API`, 'success');
+                } else {
+                    // Fallback: Load default comprehensive agent pool
+                    allAgents = getDefaultAgents();
+                    logConsole('System', `Loaded ${allAgents.length} default agents (API unavailable)`, 'warning');
+                }
+            } catch (error) {
+                allAgents = getDefaultAgents();
+                logConsole('System', `Loaded default agents (${allAgents.length} total)`, 'warning');
+            }
+
+            filteredAgents = [...allAgents];
+            renderAgentDiscovery();
+        }
+
+        // Default agent pool if API unavailable
+        function getDefaultAgents() {
+            return [
+                // Sales & Qualification
+                { id: 'lead-gen', name: 'Lead Generator', category: 'Sales', description: 'Identifies and qualifies potential leads' },
+                { id: 'qualifier', name: 'Lead Qualifier', category: 'Sales', description: 'Qualifies leads and scores potential' },
+                { id: 'pitch', name: 'Sales Pitch', category: 'Sales', description: 'Crafts compelling sales pitches' },
+                { id: 'proposal', name: 'Proposal Generator', category: 'Sales', description: 'Creates professional proposals' },
+                { id: 'objection', name: 'Objection Handler', category: 'Sales', description: 'Handles sales objections' },
+                { id: 'closer', name: 'Deal Closer', category: 'Sales', description: 'Closes sales and finalizes deals' },
+
+                // Marketing & Content
+                { id: 'content', name: 'Content Creator', category: 'Marketing', description: 'Creates marketing content' },
+                { id: 'copywriter', name: 'Copywriter', category: 'Marketing', description: 'Writes engaging copy' },
+                { id: 'seo', name: 'SEO Optimizer', category: 'Marketing', description: 'Optimizes content for search' },
+                { id: 'social-manager', name: 'Social Media Manager', category: 'Marketing', description: 'Manages social presence' },
+                { id: 'email-marketer', name: 'Email Marketer', category: 'Marketing', description: 'Creates email campaigns' },
+                { id: 'influencer', name: 'Influencer Connector', category: 'Marketing', description: 'Finds and connects influencers' },
+
+                // Customer Success
+                { id: 'support', name: 'Support Agent', category: 'Support', description: 'Provides customer support' },
+                { id: 'retention', name: 'Retention Specialist', category: 'Support', description: 'Improves customer retention' },
+                { id: 'feedback', name: 'Feedback Collector', category: 'Support', description: 'Gathers customer feedback' },
+                { id: 'onboarding', name: 'Onboarding Manager', category: 'Support', description: 'Manages client onboarding' },
+
+                // Operations & Automation
+                { id: 'workflow', name: 'Workflow Optimizer', category: 'Operations', description: 'Optimizes business workflows' },
+                { id: 'scheduler', name: 'Task Scheduler', category: 'Operations', description: 'Schedules and manages tasks' },
+                { id: 'data-analyst', name: 'Data Analyst', category: 'Operations', description: 'Analyzes business data' },
+                { id: 'process-automator', name: 'Process Automator', category: 'Operations', description: 'Automates business processes' },
+
+                // Strategy & Analysis
+                { id: 'strategist', name: 'Business Strategist', category: 'Strategy', description: 'Develops business strategy' },
+                { id: 'analyst', name: 'Market Analyst', category: 'Strategy', description: 'Analyzes market trends' },
+                { id: 'competitor', name: 'Competitor Analyst', category: 'Strategy', description: 'Analyzes competitor activity' },
+                { id: 'forecaster', name: 'Revenue Forecaster', category: 'Strategy', description: 'Forecasts revenue' },
+            ];
+        }
+
+        // Render Agent Discovery Interface
+        function renderAgentDiscovery() {
+            const html = `
+                <div class="module-header">
+                    <div class="module-title">🤖 Agent Marketplace</div>
+                    <div class="module-description">Select agents from your ${allAgents.length}+ agent pool to create custom workflows</div>
+                </div>
+
+                <div class="agent-discovery">
+                    <div class="discovery-header">
+                        <div class="discovery-title">Available Agents</div>
+                        <div class="agent-count">${selectedAgents.size} / ${allAgents.length}</div>
+                    </div>
+
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="agentSearch" placeholder="Search agents..."
+                               onkeyup="filterAgents(this.value)">
+                    </div>
+
+                    <div class="filter-tags" id="filterTags">
+                        <button class="tag-btn active" onclick="filterByCategory('all')">All</button>
+                    </div>
+
+                    <div class="agents-grid" id="agentsGrid">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+
+                <div class="selected-agents" id="selectedSection" style="display: none;">
+                    <div class="selected-title">Selected Agents (${selectedAgents.size})</div>
+                    <div class="selected-list" id="selectedList"></div>
+                </div>
+
+                <div class="module-form">
+                    <div class="form-group">
+                        <label class="form-label">Agency Name</label>
+                        <input type="text" class="form-input" id="agencyName" placeholder="e.g., Growth Hackers Team">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose</label>
+                        <textarea class="form-textarea" id="agencyPurpose" placeholder="What will this agency do?"></textarea>
+                    </div>
+                    <button class="btn" onclick="createAgency()">Create Agency</button>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+            setupFilterTags();
+            renderAgentCards();
+        }
+
+        // Setup filter tags
+        function setupFilterTags() {
+            const categories = new Set(allAgents.map(a => a.category));
+            const container = document.getElementById('filterTags');
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'tag-btn';
+                btn.textContent = cat;
+                btn.onclick = () => filterByCategory(cat);
+                container.appendChild(btn);
+            });
+        }
+
+        // Filter agents
+        function filterAgents(search) {
+            currentFilter = search.toLowerCase();
+            renderAgentCards();
+        }
+
+        function filterByCategory(category) {
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (category === 'all') {
+                filteredAgents = [...allAgents];
+            } else {
+                filteredAgents = allAgents.filter(a => a.category === category);
+            }
+            renderAgentCards();
+        }
+
+        // Render agent cards
+        function renderAgentCards() {
+            const filtered = filteredAgents.filter(a =>
+                a.name.toLowerCase().includes(currentFilter) ||
+                a.description.toLowerCase().includes(currentFilter)
+            );
+
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = filtered.map(agent => `
+                <div class="agent-card ${selectedAgents.has(agent.id) ? 'selected' : ''}"
+                     onclick="toggleAgent('${agent.id}')">
+                    <div>
+                        <div class="agent-name">${agent.name}</div>
+                        <div class="agent-category">${agent.category}</div>
+                        <div class="agent-description">${agent.description}</div>
+                    </div>
+                    <input type="checkbox" class="agent-checkbox" ${selectedAgents.has(agent.id) ? 'checked' : ''}>
+                </div>
+            `).join('');
+
+            updateSelectedDisplay();
+        }
+
+        // Toggle agent selection
+        function toggleAgent(agentId) {
+            if (selectedAgents.has(agentId)) {
+                selectedAgents.delete(agentId);
+            } else {
+                selectedAgents.add(agentId);
+            }
+            renderAgentCards();
+        }
+
+        // Update selected display
+        function updateSelectedDisplay() {
+            const section = document.getElementById('selectedSection');
+            if (selectedAgents.size > 0) {
+                section.style.display = 'block';
+                const list = document.getElementById('selectedList');
+                list.innerHTML = Array.from(selectedAgents).map(id => {
+                    const agent = allAgents.find(a => a.id === id);
+                    return `
+                        <div class="agent-tag">
+                            ${agent?.name || id}
+                            <span class="remove" onclick="toggleAgent('${id}')">×</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        // Create agency
+        function createAgency() {
+            const name = document.getElementById('agencyName').value;
+            const purpose = document.getElementById('agencyPurpose').value;
+
+            if (!name || selectedAgents.size === 0) {
+                alert('Please name your agency and select at least one agent');
+                return;
+            }
+
+            logConsole('Agency', `Created: ${name} (${selectedAgents.size} agents)`, 'success');
+            logConsole('Agency', `Purpose: ${purpose}`, 'info');
+
+            selectedAgents.forEach(agentId => {
+                const agent = allAgents.find(a => a.id === agentId);
+                logConsole('Agent', `Added: ${agent?.name}`, 'success');
+            });
+
+            // Reset form
+            document.getElementById('agencyName').value = '';
+            document.getElementById('agencyPurpose').value = '';
+            selectedAgents.clear();
+            renderAgentCards();
+        }
+
+        // Module Switching
+        function switchModule(module) {
+            currentModule = module;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="switchModule('${module}')"]`).classList.add('active');
+            renderModule();
+        }
+
+        function renderModule() {
+            const titles = {
+                agents: '🤖 AI Agents Discovery',
+                website: '🌐 Website Builder',
+                social: '📱 Social Media Posts',
+                brand: '🎨 Brand Tools',
+                email: '✉️ Email Campaigns'
+            };
+
+            document.getElementById('headerTitle').textContent = titles[currentModule];
+
+            if (currentModule === 'agents') {
+                renderAgentDiscovery();
+            } else {
+                renderModuleForm();
+            }
+        }
+
+        // Render module forms
+        function renderModuleForm() {
+            const forms = {
+                website: `
+                    <div class="module-header">
+                        <div class="module-title">Website Builder</div>
+                        <div class="module-description">Create and design websites with your selected agents</div>
+                    </div>
+                    <div class="module-form">
+                        <div class="form-group">
+                            <label class="form-label">Website Name</label>
+                            <input type="text" class="form-input" placeholder="Your website title">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" placeholder="Website description"></textarea>
+                        </div>
+                        <button class="btn" onclick="executeWithAgents('website')">Generate Website</button>
+                    </div>
+                `,
+                social: `
+                    <div class="module-header">
+                        <div class="module-title">Social Media Posts</div>
+                        <div class="module-description">Generate content for multiple platforms</div>
+                    </div>
+                    <div class="module-form">
+                        <div class="form-group">
+                            <label class="form-label">Topic</label>
+                            <input type="text" class="form-input" placeholder="What to post about?">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Platforms</label>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                                <label><input type="checkbox"> Twitter</label>
+                                <label><input type="checkbox"> LinkedIn</label>
+                                <label><input type="checkbox"> Instagram</label>
+                                <label><input type="checkbox"> Facebook</label>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="executeWithAgents('social')">Generate Posts</button>
+                    </div>
+                `,
+                brand: `
+                    <div class="module-header">
+                        <div class="module-title">Brand Tools</div>
+                        <div class="module-description">Create brand assets and guidelines</div>
+                    </div>
+                    <div class="module-form">
+                        <div class="form-group">
+                            <label class="form-label">Brand Name</label>
+                            <input type="text" class="form-input" placeholder="Your brand name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Brand Description</label>
+                            <textarea class="form-textarea" placeholder="What does your brand do?"></textarea>
+                        </div>
+                        <button class="btn" onclick="executeWithAgents('brand')">Generate Brand Assets</button>
+                    </div>
+                `,
+                email: `
+                    <div class="module-header">
+                        <div class="module-title">Email Campaigns</div>
+                        <div class="module-description">Create and manage email campaigns</div>
+                    </div>
+                    <div class="module-form">
+                        <div class="form-group">
+                            <label class="form-label">Campaign Subject</label>
+                            <input type="text" class="form-input" placeholder="Email subject line">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Campaign Message</label>
+                            <textarea class="form-textarea" placeholder="Email body content"></textarea>
+                        </div>
+                        <button class="btn" onclick="executeWithAgents('email')">Create Campaign</button>
+                    </div>
+                `
+            };
+
+            document.getElementById('content').innerHTML = forms[currentModule] || '';
+        }
+
+        // Execute functions
+        function executeCurrent() {
+            if (currentModule === 'agents') {
+                createAgency();
+            } else {
+                executeWithAgents(currentModule);
+            }
+        }
+
+        function executeWithAgents(module) {
+            if (selectedAgents.size === 0) {
+                alert('Please select at least one agent from the Agent Marketplace first');
+                switchModule('agents');
+                return;
+            }
+
+            logConsole('Execution', `Running ${module} module with ${selectedAgents.size} agents`, 'info');
+
+            selectedAgents.forEach(agentId => {
+                const agent = allAgents.find(a => a.id === agentId);
+                logConsole(agent?.name, `Processing ${module} request...`, 'success');
+            });
+        }
+
+        // Console logging
+        function logConsole(source, message, type = 'info') {
+            const console = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.innerHTML = `<span class="console-timestamp">${timestamp}</span> [${source}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '';
+        }
+
+        // Export/Import
         function exportConfig() {
-            alert('Export: Download all configurations as JSON');
+            const config = {
+                selectedAgents: Array.from(selectedAgents),
+                allAgents: allAgents,
+                timestamp: new Date().toISOString()
+            };
+            const json = JSON.stringify(config, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `automation-hub-${Date.now()}.json`;
+            a.click();
+            logConsole('Export', 'Configuration exported', 'success');
         }
 
         function importConfig() {
-            alert('Import: Load saved configurations from JSON');
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const config = JSON.parse(event.target.result);
+                        selectedAgents = new Set(config.selectedAgents);
+                        logConsole('Import', `Loaded ${selectedAgents.size} agents`, 'success');
+                        renderAgentCards();
+                    } catch (err) {
+                        logConsole('Import', 'Failed to import configuration', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
         }
-
-        function showSettings() {
-            alert('Settings: Configure API keys, integrations, and preferences');
-        }
-
-        // Initialize
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
-        document.querySelector('.theme-selector').value = savedTheme;
-        renderModule();
     </script>
 </body>
 </html>
