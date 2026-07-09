@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Studio - Open Source Agent Orchestration</title>
+    <style>
+        :root {
+            --ground-light: #f9f8f6;
+            --ground-dark: #0d1117;
+            --primary: #0b5f7f;
+            --accent: #d97706;
+            --success: #16a34a;
+            --critical: #dc2626;
+            --attention: #f59e0b;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --ground-light: #0d1117;
+                --ground-dark: #f9f8f6;
+                --text-primary: #f3f4f6;
+                --text-secondary: #d1d5db;
+                --text-muted: #9ca3af;
+                --border: #374151;
+                --surface: #1f2937;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --ground-light: #0d1117;
+            --ground-dark: #f9f8f6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --surface: #1f2937;
+        }
+
+        :root[data-theme="light"] {
+            --ground-light: #f9f8f6;
+            --ground-dark: #0d1117;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--ground-light);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            color: white;
+        }
+
+        /* MAIN GRID */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* AVAILABLE AGENTS PANEL */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .panel-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+        }
+
+        .panel-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* AGENT CARDS */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .agent-card {
+            background: var(--ground-light);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .agent-card:hover {
+            border-color: var(--primary);
+            background: var(--surface);
+        }
+
+        .agent-card.selected {
+            border-color: var(--accent);
+            background: rgba(217, 119, 6, 0.05);
+        }
+
+        .agent-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .agent-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .agent-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* CUSTOM AGENCIES PANEL */
+        .agencies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .agency-card {
+            background: var(--ground-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .agency-card:hover {
+            border-color: var(--primary);
+        }
+
+        .agency-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .agency-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .agency-purpose {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .agency-agents {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .agent-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .agent-tag .remove {
+            cursor: pointer;
+            font-weight: 700;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .agent-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .agency-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .agency-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .agency-actions button {
+            flex: 1;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* CREATE AGENCY FORM */
+        .create-form {
+            background: var(--ground-light);
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11, 95, 127, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .selected-agents-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            min-height: 32px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        /* EXECUTION SECTION */
+        .execution-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .execution-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .execution-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .execution-input input {
+            flex: 1;
+        }
+
+        .execution-console {
+            background: var(--ground-light);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .console-line {
+            padding: 2px 0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .console-time {
+            color: var(--text-muted);
+            min-width: 60px;
+        }
+
+        .console-agent {
+            color: var(--primary);
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .console-message {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        .console-message.success {
+            color: var(--success);
+        }
+
+        .console-message.error {
+            color: var(--critical);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .agents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+
+        /* UTILITIES */
+        .mt-2 { margin-top: 8px; }
+        .mb-2 { margin-bottom: 8px; }
+        .text-muted { color: var(--text-muted); }
+        .text-secondary { color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="logo">
+                <span class="logo-icon">⚙️</span>
+                <span>AI Agent Studio</span>
+            </div>
+            <div class="header-controls">
+                <button onclick="exportConfig()">↓ Export</button>
+                <button onclick="importConfig()">↑ Import</button>
+                <button class="btn-primary" onclick="toggleTheme()">🌓 Theme</button>
+            </div>
+        </header>
+
+        <!-- MAIN GRID -->
+        <div class="main-grid">
+            <!-- LEFT: AVAILABLE AGENTS & CREATE AGENCY -->
+            <div>
+                <!-- AVAILABLE AGENTS -->
+                <div class="panel">
+                    <div class="panel-header">Available Agents</div>
+                    <p class="panel-description">Select agents to add to your custom agency. Click to select multiple.</p>
+                    <div class="agents-grid" id="agentsGrid"></div>
+                </div>
+
+                <!-- CREATE AGENCY FORM -->
+                <div class="create-form mt-2">
+                    <div class="form-label">Create New Agency</div>
+
+                    <div class="form-group">
+                        <label class="form-label">Agency Name</label>
+                        <input type="text" id="agencyName" placeholder="e.g., Enterprise Sales Team">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Purpose / Use Case</label>
+                        <textarea id="agencyPurpose" placeholder="What is this agency for? e.g., Handle complex B2B deals with detailed proposals"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Selected Agents</label>
+                        <div class="selected-agents-display" id="selectedDisplay">No agents selected</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button onclick="clearSelection()">Clear</button>
+                        <button class="btn-primary" onclick="createAgency()">+ Create Agency</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: CREATED AGENCIES -->
+            <div>
+                <div class="panel">
+                    <div class="panel-header">Your Custom Agencies</div>
+                    <p class="panel-description">Manage your created agencies. Deploy agents as needed.</p>
+                    <div class="agencies-list" id="agenciesList">
+                        <div style="text-align: center; color: var(--text-muted); padding: 32px 16px;">
+                            No agencies yet. Create one to get started.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXECUTION SECTION -->
+        <div class="execution-section">
+            <div class="execution-header">Run Agency</div>
+            <div class="execution-input">
+                <input type="text" id="executionInput" placeholder="Enter your request or task for the selected agency...">
+                <button class="btn-primary" onclick="executeAgency()">Execute</button>
+            </div>
+            <div class="execution-console" id="console"></div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-header" id="modalTitle"></div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const agents = [
+            { id: 'lead-gen', name: 'Lead Generation', icon: '📍', role: 'Find & Research' },
+            { id: 'qualification', name: 'Qualification', icon: '✅', role: 'Score & Filter' },
+            { id: 'pitch', name: 'Sales Pitch', icon: '💬', role: 'Outreach' },
+            { id: 'proposal', name: 'Proposal Gen', icon: '📄', role: 'Generate Docs' },
+            { id: 'objection', name: 'Objection Handler', icon: '⚔️', role: 'Handle Concerns' },
+            { id: 'closing', name: 'Closing', icon: '🎉', role: 'Finalize Deal' }
+        ];
+
+        let selectedAgents = [];
+        let agencies = JSON.parse(localStorage.getItem('agencies')) || [];
+        let selectedAgency = null;
+
+        function init() {
+            renderAgents();
+            renderAgencies();
+            addConsoleLine('SYSTEM', 'AI Agent Studio initialized', 'success');
+        }
+
+        function renderAgents() {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = agents.map(agent => `
+                <div class="agent-card ${selectedAgents.includes(agent.id) ? 'selected' : ''}"
+                     onclick="toggleAgent('${agent.id}')">
+                    <div class="agent-icon">${agent.icon}</div>
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-role">${agent.role}</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleAgent(id) {
+            if (selectedAgents.includes(id)) {
+                selectedAgents = selectedAgents.filter(a => a !== id);
+            } else {
+                selectedAgents.push(id);
+            }
+            renderAgents();
+            updateSelectedDisplay();
+        }
+
+        function updateSelectedDisplay() {
+            const display = document.getElementById('selectedDisplay');
+            if (selectedAgents.length === 0) {
+                display.textContent = 'No agents selected';
+            } else {
+                display.innerHTML = selectedAgents.map(id => {
+                    const agent = agents.find(a => a.id === id);
+                    return `<span>${agent.icon} ${agent.name}</span>`;
+                }).join('');
+            }
+        }
+
+        function clearSelection() {
+            selectedAgents = [];
+            renderAgents();
+            updateSelectedDisplay();
+            document.getElementById('agencyName').value = '';
+            document.getElementById('agencyPurpose').value = '';
+        }
+
+        function createAgency() {
+            const name = document.getElementById('agencyName').value.trim();
+            const purpose = document.getElementById('agencyPurpose').value.trim();
+
+            if (!name) {
+                alert('Please enter an agency name');
+                return;
+            }
+
+            if (selectedAgents.length === 0) {
+                alert('Please select at least one agent');
+                return;
+            }
+
+            const agency = {
+                id: Date.now(),
+                name,
+                purpose,
+                agents: [...selectedAgents],
+                created: new Date().toLocaleDateString(),
+                executions: 0
+            };
+
+            agencies.push(agency);
+            localStorage.setItem('agencies', JSON.stringify(agencies));
+
+            clearSelection();
+            renderAgencies();
+            addConsoleLine('SYSTEM', `Agency "${name}" created with ${selectedAgents.length} agents`, 'success');
+        }
+
+        function renderAgencies() {
+            const list = document.getElementById('agenciesList');
+
+            if (agencies.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); padding: 32px 16px;">
+                        No agencies yet. Create one to get started.
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = agencies.map(agency => {
+                const agentNames = agency.agents.map(id => {
+                    const agent = agents.find(a => a.id === id);
+                    return agent ? agent.name : id;
+                }).join(', ');
+
+                return `
+                    <div class="agency-card">
+                        <div class="agency-header">
+                            <div>
+                                <div class="agency-name">${agency.name}</div>
+                                <div class="agency-purpose">${agency.purpose || 'No description'}</div>
+                            </div>
+                        </div>
+                        <div class="agency-agents">
+                            ${agency.agents.map(id => {
+                                const agent = agents.find(a => a.id === id);
+                                return `<span class="agent-tag">${agent.icon} ${agent.name}</span>`;
+                            }).join('')}
+                        </div>
+                        <div class="agency-stats">
+                            <div class="stat">
+                                <span class="stat-label">Agents</span>
+                                <span class="stat-value">${agency.agents.length}</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Executions</span>
+                                <span class="stat-value">${agency.executions}</span>
+                            </div>
+                        </div>
+                        <div class="agency-actions">
+                            <button onclick="selectAgency(${agency.id})">Select</button>
+                            <button onclick="deleteAgency(${agency.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectAgency(id) {
+            selectedAgency = agencies.find(a => a.id === id);
+            addConsoleLine('SYSTEM', `Selected agency: ${selectedAgency.name}`, 'success');
+        }
+
+        function deleteAgency(id) {
+            if (confirm('Delete this agency?')) {
+                agencies = agencies.filter(a => a.id !== id);
+                localStorage.setItem('agencies', JSON.stringify(agencies));
+                if (selectedAgency?.id === id) selectedAgency = null;
+                renderAgencies();
+                addConsoleLine('SYSTEM', 'Agency deleted', 'success');
+            }
+        }
+
+        function executeAgency() {
+            if (!selectedAgency) {
+                alert('Please select an agency first');
+                return;
+            }
+
+            const input = document.getElementById('executionInput').value.trim();
+            if (!input) {
+                alert('Please enter a task');
+                return;
+            }
+
+            addConsoleLine('INPUT', input);
+
+            selectedAgency.agents.forEach((agentId, index) => {
+                setTimeout(() => {
+                    const agent = agents.find(a => a.id === agentId);
+                    addConsoleLine(agent.name, `Processing...`);
+
+                    setTimeout(() => {
+                        addConsoleLine(agent.name, `✓ Completed`, 'success');
+                    }, 800);
+                }, index * 1200);
+            });
+
+            setTimeout(() => {
+                selectedAgency.executions++;
+                localStorage.setItem('agencies', JSON.stringify(agencies));
+                renderAgencies();
+                addConsoleLine('SYSTEM', `Agency "${selectedAgency.name}" execution complete`, 'success');
+                document.getElementById('executionInput').value = '';
+            }, selectedAgency.agents.length * 1200);
+        }
+
+        function addConsoleLine(agent, message, type = '') {
+            const console = document.getElementById('console');
+            const time = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerHTML = `
+                <span class="console-time">${time}</span>
+                <span class="console-agent">${agent}</span>
+                <span class="console-message ${type}">${message}</span>
+            `;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const current = root.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function exportConfig() {
+            const config = JSON.stringify(agencies, null, 2);
+            const blob = new Blob([config], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-agencies.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importConfig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const imported = JSON.parse(event.target.result);
+                        agencies = imported;
+                        localStorage.setItem('agencies', JSON.stringify(agencies));
+                        renderAgencies();
+                        addConsoleLine('SYSTEM', 'Configuration imported', 'success');
+                    } catch {
+                        alert('Invalid file format');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Load theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
