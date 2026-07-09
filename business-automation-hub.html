@@ -3,103 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Automation Hub - Agent Execution Platform</title>
+    <title>Business Automation Hub</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary: #0b5f7f;
             --accent: #d97706;
             --success: #16a34a;
             --critical: #dc2626;
-            --attention: #f59e0b;
-            --bg-light: #f9f8f6;
-            --bg-dark: #0d1117;
-            --text-light: #1f2937;
-            --text-dark: #f3f4f6;
-            --border-light: #e5e7eb;
-            --border-dark: #374151;
-            --surface-light: #ffffff;
-            --surface-dark: #1f2937;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: var(--bg-dark);
-                --text: var(--text-dark);
-                --border: var(--border-dark);
-                --surface: var(--surface-dark);
-            }
-        }
-
-        :root {
-            --bg: var(--bg-light);
-            --text: var(--text-light);
-            --border: var(--border-light);
-            --surface: var(--surface-light);
-        }
-
-        :root[data-theme="light"] {
-            --bg: var(--bg-light);
-            --text: var(--text-light);
-            --border: var(--border-light);
-            --surface: var(--surface-light);
-        }
-
-        :root[data-theme="dark"] {
-            --bg: var(--bg-dark);
-            --text: var(--text-dark);
-            --border: var(--border-dark);
-            --surface: var(--surface-dark);
+            --bg: #f9f8f6;
+            --text: #1f2937;
+            --border: #e5e7eb;
+            --surface: #ffffff;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
-            line-height: 1.5;
         }
 
-        .container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            min-height: 100vh;
+        .wrapper {
+            display: flex;
+            height: 100vh;
         }
 
         .sidebar {
+            width: 280px;
             background: var(--surface);
             border-right: 1px solid var(--border);
             padding: 20px;
             overflow-y: auto;
         }
 
-        .logo {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 24px;
-        }
-
-        .nav-section {
-            margin-bottom: 20px;
-        }
-
-        .nav-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text);
-            opacity: 0.6;
-            margin-bottom: 8px;
-        }
-
+        .logo { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 24px; }
+        .nav-label { font-size: 11px; font-weight: 700; text-transform: uppercase; opacity: 0.6; margin: 16px 0 8px; }
         .nav-btn {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px;
             margin-bottom: 6px;
             background: transparent;
             border: 1px solid transparent;
@@ -110,21 +52,14 @@
             text-align: left;
             transition: all 0.2s;
         }
-
-        .nav-btn:hover {
-            background: var(--bg);
-            border-color: var(--border);
-        }
-
-        .nav-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        .nav-btn:hover { background: var(--bg); border-color: var(--border); }
+        .nav-btn.active { background: var(--primary); color: white; }
 
         .main {
+            flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .header {
@@ -136,51 +71,12 @@
             align-items: center;
         }
 
-        .header-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .btn {
-            padding: 10px 18px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg);
-        }
-
-        .btn-success {
-            background: var(--success);
-        }
-
-        .btn-danger {
-            background: var(--critical);
-        }
+        .header-title { font-size: 18px; font-weight: 600; }
 
         .content {
             flex: 1;
             overflow-y: auto;
             padding: 24px;
-            display: block;
-            min-height: 100%;
         }
 
         .panel {
@@ -188,37 +84,16 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .panel-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-        }
+        .panel-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+        .section-title { font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
 
-        .section-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 16px;
-            margin-bottom: 8px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .form-label {
-            font-size: 12px;
-            font-weight: 600;
-        }
-
+        .form-group { margin-bottom: 12px; }
+        .form-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block; }
         .form-input, .form-textarea, .form-select {
+            width: 100%;
             padding: 10px;
             border: 1px solid var(--border);
             background: var(--bg);
@@ -227,11 +102,7 @@
             font-family: inherit;
             font-size: 13px;
         }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .form-textarea { min-height: 80px; resize: vertical; }
 
         .agent-grid {
             display: grid;
@@ -253,102 +124,24 @@
             cursor: pointer;
             border-radius: 4px;
             border: 1px solid var(--border);
-            background: transparent;
             font-size: 12px;
             transition: all 0.2s;
         }
+        .agent-checkbox:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .agent-checkbox:hover {
+        .btn {
+            padding: 10px 18px;
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
-        }
-
-        .agent-checkbox input {
-            cursor: pointer;
-        }
-
-        .task-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
+            border: none;
             border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 8px;
-        }
-
-        .task-name {
-            font-weight: 600;
             font-size: 13px;
-            color: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
         }
-
-        .task-status {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 12px;
-            text-transform: uppercase;
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--attention);
-        }
-
-        .status-running {
-            background: rgba(11, 95, 127, 0.2);
-            color: var(--primary);
-        }
-
-        .status-completed {
-            background: rgba(22, 163, 74, 0.2);
-            color: var(--success);
-        }
-
-        .status-failed {
-            background: rgba(220, 38, 38, 0.2);
-            color: var(--critical);
-        }
-
-        .task-description {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-bottom: 8px;
-        }
-
-        .pipeline {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            overflow-x: auto;
-            padding: 8px 0;
-        }
-
-        .pipeline-step {
-            padding: 6px 12px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 11px;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .pipeline-step.active {
-            border-color: var(--primary);
-            background: rgba(11, 95, 127, 0.1);
-            color: var(--primary);
-            font-weight: 600;
-        }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text); }
 
         .output-item {
             background: var(--bg);
@@ -358,63 +151,47 @@
             margin-bottom: 12px;
         }
 
-        .output-agent {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 13px;
-            margin-bottom: 4px;
+        .output-agent { font-weight: 600; color: var(--primary); font-size: 13px; margin-bottom: 4px; }
+        .output-content { font-size: 12px; opacity: 0.8; white-space: pre-wrap; margin-bottom: 10px; }
+
+        .output-actions { display: flex; gap: 8px; }
+        .btn-small { flex: 1; padding: 6px 12px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .btn-approve { background: var(--success); color: white; }
+        .btn-reject { background: var(--critical); color: white; }
+
+        .client-panel {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
 
-        .output-content {
-            font-size: 12px;
-            line-height: 1.5;
-            opacity: 0.8;
-            max-height: 100px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: 'Monaco', 'Menlo', monospace;
-            margin-bottom: 10px;
-        }
+        .client-name { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+        .client-info { font-size: 12px; opacity: 0.9; margin-bottom: 2px; }
 
-        .output-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 11px;
-            flex: 1;
-            border: none;
+        .action-btn {
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
             border-radius: 4px;
-            cursor: pointer;
+            font-size: 10px;
             font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 6px;
+            margin-right: 6px;
             transition: all 0.2s;
         }
-
-        .btn-approve {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-approve:hover {
-            opacity: 0.9;
-        }
-
-        .btn-reject {
-            background: var(--critical);
-            color: white;
-        }
-
-        .btn-reject:hover {
-            opacity: 0.9;
-        }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.3); }
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 12px;
+            margin-bottom: 16px;
         }
 
         .metric-card {
@@ -425,1002 +202,352 @@
             text-align: center;
         }
 
-        .metric-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary);
-        }
+        .metric-value { font-size: 24px; font-weight: 700; color: var(--primary); }
+        .metric-label { font-size: 11px; opacity: 0.7; margin-top: 4px; }
 
-        .metric-label {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: 4px;
-        }
-
-        .activity-feed {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .activity-item {
-            padding: 8px;
-            font-size: 12px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            gap: 8px;
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-time {
-            opacity: 0.5;
-            min-width: 60px;
-            font-family: 'Monaco', 'Menlo', monospace;
-        }
-
-        .activity-text {
-            flex: 1;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .client-panel {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .client-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .client-info {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-bottom: 2px;
-        }
-
-        .client-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .action-btn {
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-
-        .client-form {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal {
-            background: var(--surface);
-            border-radius: 8px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--primary);
-        }
-
-        .template-item {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .template-item:hover {
-            border-color: var(--primary);
-            background: rgba(11, 95, 127, 0.05);
-        }
-
-        .template-name {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .template-desc {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-bottom: 8px;
-        }
-
-        .template-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .template-actions button {
-            flex: 1;
-            padding: 6px;
-            font-size: 11px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background: var(--primary);
-            color: white;
-            transition: all 0.2s;
-        }
-
-        .template-actions button:hover {
-            opacity: 0.9;
-        }
-
-        .template-actions button.delete {
-            background: var(--critical);
-        }
-
-        @media (max-width: 1200px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="wrapper">
+        <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="logo">🚀 Agent Hub</div>
 
-            <div class="nav-section">
-                <div class="nav-label">Dashboard</div>
-                <button class="nav-btn active" onclick="switchView('dashboard')">📊 Overview</button>
-                <button class="nav-btn" onclick="switchView('execution')">⚙️ Execution</button>
-                <button class="nav-btn" onclick="switchView('approvals')">✅ Approvals</button>
-                <button class="nav-btn" onclick="switchView('clients')">👥 Clients</button>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-label">Actions</div>
-                <button class="nav-btn btn-secondary" onclick="exportData()">📥 Export</button>
-                <button class="nav-btn btn-secondary" onclick="clearAll()">🗑️ Clear</button>
-            </div>
+            <div class="nav-label">Dashboard</div>
+            <button class="nav-btn active" onclick="showView('dashboard')">📊 Overview</button>
+            <button class="nav-btn" onclick="showView('execution')">⚙️ Execution</button>
+            <button class="nav-btn" onclick="showView('approvals')">✅ Approvals</button>
+            <button class="nav-btn" onclick="showView('clients')">👥 Clients</button>
         </div>
 
+        <!-- MAIN -->
         <div class="main">
             <div class="header">
                 <div class="header-title">Business Automation Hub</div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-secondary" id="statusBtn" style="cursor: default;">● Ready</button>
-                </div>
+                <div>● Ready</div>
             </div>
 
             <div class="content" id="content">
-                <!-- Dynamic views loaded here -->
+                <!-- CONTENT LOADS HERE -->
             </div>
-        </div>
-    </div>
-
-    <!-- Template Modal -->
-    <div id="templateModal" class="modal-overlay" style="display: none;">
-        <div class="modal">
-            <div class="modal-title">📋 Saved Workflows</div>
-            <div id="templateList">
-                <div style="text-align: center; opacity: 0.6;">No templates saved yet</div>
-            </div>
-            <button class="btn btn-secondary" onclick="closeTemplateModal()" style="width: 100%; margin-top: 16px;">Close</button>
         </div>
     </div>
 
     <script>
-        // Global State
+        // STATE
         let agents = generateAgents();
         let tasks = [];
         let outputs = [];
-        let activities = [];
-        let currentView = 'dashboard';
-        let selectedAgents = new Set();
         let clients = [];
+        let selectedAgents = new Set();
         let selectedClient = null;
-        let templates = [];
-        let showTemplateModal = false;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            renderView();
-            loadState();
-        });
+        let currentView = 'dashboard';
 
         function generateAgents() {
-            const categories = {
-                'Sales': ['Lead Gen', 'Qualifier', 'Pitch', 'Proposal', 'Objection', 'Closer'],
-                'Marketing': ['Content', 'Copywriter', 'SEO', 'Social', 'Email', 'Influencer'],
-                'Support': ['Support', 'Retention', 'Feedback', 'Onboarding'],
-                'Operations': ['Workflow', 'Scheduler', 'Analyst', 'Automator'],
-                'Strategy': ['Strategist', 'Analyst', 'Competitor', 'Forecaster'],
-                'Development': ['Frontend', 'Backend', 'DevOps', 'QA', 'Architect'],
-                'Design': ['UI', 'UX', 'Brand', 'Motion', 'System'],
-                'Finance': ['Analyst', 'Budget', 'Auditor', 'Planner'],
-                'HR': ['Recruiter', 'Manager', 'Training', 'Engagement'],
-                'Data': ['Scientist', 'Analyst', 'Engineer', 'Modeler']
-            };
-
-            let agents = [];
-            let id = 1;
-            for (const [cat, names] of Object.entries(categories)) {
-                names.forEach(name => {
-                    agents.push({
-                        id: `agent-${id}`,
-                        name: `${name} Agent`,
-                        category: cat
-                    });
-                    id++;
-                });
-            }
-            return agents;
+            return [
+                { id: 'a1', name: 'Lead Gen Agent' },
+                { id: 'a2', name: 'Qualifier Agent' },
+                { id: 'a3', name: 'Pitch Agent' },
+                { id: 'a4', name: 'Proposal Agent' },
+                { id: 'a5', name: 'Objection Agent' },
+                { id: 'a6', name: 'Closer Agent' },
+                { id: 'a7', name: 'Content Agent' },
+                { id: 'a8', name: 'Email Agent' },
+                { id: 'a9', name: 'Social Agent' },
+                { id: 'a10', name: 'Analytics Agent' }
+            ];
         }
 
-        function switchView(view) {
+        function showView(view) {
             currentView = view;
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-            renderView();
+            renderContent();
         }
 
-        function renderView() {
+        function renderContent() {
             const content = document.getElementById('content');
+            let html = '';
+
             if (currentView === 'dashboard') {
-                content.innerHTML = renderDashboard();
-            } else if (currentView === 'execution') {
-                content.innerHTML = renderExecution();
-            } else if (currentView === 'approvals') {
-                content.innerHTML = renderApprovals();
-            } else if (currentView === 'clients') {
-                content.innerHTML = renderClients();
+                html = `
+                    <div class="panel">
+                        <div class="panel-title">📊 Performance Metrics</div>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-value">${tasks.length}</div>
+                                <div class="metric-label">Total Tasks</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">${tasks.filter(t => t.status === 'completed').length}</div>
+                                <div class="metric-label">Completed</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">${outputs.filter(o => o.status === 'approved').length}</div>
+                                <div class="metric-label">Approved</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">${outputs.filter(o => o.status === 'pending').length}</div>
+                                <div class="metric-label">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
-        }
+            else if (currentView === 'execution') {
+                html = `
+                    <div class="panel">
+                        <div class="panel-title">⚙️ Task Execution</div>
 
-        function renderDashboard() {
-            const completed = tasks.filter(t => t.status === 'completed').length;
-            const approved = outputs.filter(o => o.status === 'approved').length;
-            const pending = outputs.filter(o => o.status === 'pending').length;
-
-            return `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                <div class="panel">
-                    <div class="panel-title">📊 Performance Metrics</div>
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-value">${tasks.length}</div>
-                            <div class="metric-label">Total Tasks</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">${completed}</div>
-                            <div class="metric-label">Completed</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">${approved}</div>
-                            <div class="metric-label">Approved</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">${pending}</div>
-                            <div class="metric-label">Pending Review</div>
-                        </div>
-                    </div>
-
-                    <div class="section-title">Recent Tasks</div>
-                    <div style="max-height: 300px; overflow-y: auto;">
-                        ${tasks.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No tasks yet</div>' :
-                          tasks.slice(-5).reverse().map(task => `
-                            <div class="task-card">
-                                <div class="task-header">
-                                    <div class="task-name">${task.name}</div>
-                                    <span class="task-status status-${task.status}">${task.status}</span>
-                                </div>
-                                <div class="task-description">${task.description}</div>
-                                <div class="pipeline">
-                                    ${task.agents.map((agent, i) => `
-                                        <div class="pipeline-step ${task.currentAgent === i ? 'active' : ''}">
-                                            ${task.currentAgent > i ? '✓' : task.currentAgent === i ? '◉' : '○'} ${agent.split(' ')[0]}
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">📡 Activity Feed</div>
-                    <div class="activity-feed">
-                        ${activities.length === 0 ? '<div style="opacity: 0.6; font-size: 12px; padding: 12px;">No activity</div>' :
-                          activities.slice(-15).reverse().map(activity => `
-                            <div class="activity-item">
-                                <div class="activity-time">${activity.time}</div>
-                                <div class="activity-text">${activity.text}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                </div>
-            `;
-        }
-
-        function renderExecution() {
-            return `
-                <div class="panel">
-                    <div class="panel-title">⚙️ Task Execution</div>
-
-                    ${selectedClient ? `
-                        <div class="client-panel">
-                            <div class="client-name">📌 ${selectedClient.name}</div>
-                            <div class="client-info">🏢 ${selectedClient.company}</div>
-                            <div class="client-info">💼 ${selectedClient.designation}</div>
-                            <div class="client-info">📧 ${selectedClient.email}</div>
-                            <div class="client-info">📱 ${selectedClient.phone}</div>
-                            <div class="client-info">📦 Products: ${selectedClient.products}</div>
-                            <div class="client-actions">
-                                <a class="action-btn" href="tel:${selectedClient.phone}">📞 Call</a>
-                                <a class="action-btn" href="mailto:${selectedClient.email}">📧 Email</a>
-                                <a class="action-btn" href="https://wa.me/${selectedClient.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
-                                <a class="action-btn" href="https://www.linkedin.com/search/results/people/?keywords=${selectedClient.name}" target="_blank">🔗 LinkedIn</a>
-                            </div>
-                            <button class="btn btn-secondary" onclick="selectedClient = null; renderView()" style="margin-top: 12px;">Change Client</button>
-                        </div>
-                    ` : `
                         <div class="form-group">
-                            <div class="form-label">Select Client</div>
-                            <select class="form-select" onchange="selectClient(this.value)">
-                                <option value="">-- New or No Client --</option>
-                                ${clients.map(c => `<option value="${c.id}">${c.name} - ${c.company} (${c.designation})</option>`).join('')}
+                            <label class="form-label">Task Name</label>
+                            <input type="text" class="form-input" id="taskName" placeholder="Task name">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-textarea" id="taskDesc" placeholder="Task description"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Client</label>
+                            <select class="form-select" id="clientSelect">
+                                <option value="">-- No Client --</option>
+                                ${clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
                             </select>
                         </div>
-                    `}
 
-                    <div class="form-group">
-                        <div class="form-label">Task Name</div>
-                        <input type="text" class="form-input" id="taskName" placeholder="e.g., Lead Generation Campaign">
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-label">Task Description</div>
-                        <textarea class="form-textarea" id="taskDesc" placeholder="What should the agents do?"></textarea>
-                    </div>
-
-                    <div class="section-title">Select Agents (${selectedAgents.size} selected)</div>
-                    <div class="agent-grid">
-                        ${agents.map(agent => `
-                            <label class="agent-checkbox">
-                                <input type="checkbox" value="${agent.id}" ${selectedAgents.has(agent.id) ? 'checked' : ''}
-                                       onchange="toggleAgent('${agent.id}')">
-                                <span>${agent.name}</span>
-                            </label>
-                        `).join('')}
-                    </div>
-
-                    <div style="display: flex; gap: 8px; margin-top: 16px;">
-                        <button class="btn" onclick="executeTask()" style="flex: 2;">▶️ Execute Workflow</button>
-                        <button class="btn btn-secondary" onclick="saveTemplate()" style="flex: 1;">💾 Save Template</button>
-                        <button class="btn btn-secondary" onclick="openTemplateModal()" style="flex: 1;">📋 Templates (${templates.length})</button>
-                    </div>
-                </div>
-
-                <div class="panel full-width">
-                    <div class="panel-title">🔄 Current Execution</div>
-                    ${tasks.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No active tasks</div>' :
-                      tasks.map(task => `
-                        <div class="task-card">
-                            <div class="task-header">
-                                <div class="task-name">${task.name}</div>
-                                <span class="task-status status-${task.status}">
-                                    ${task.status === 'running' ? '<span class="spinner"></span>' : ''} ${task.status}
-                                </span>
-                            </div>
-                            <div class="task-description">${task.description}</div>
-                            <div class="pipeline">
-                                ${task.agents.map((agent, i) => `
-                                    <div class="pipeline-step ${task.currentAgent === i ? 'active' : ''}">
-                                        ${task.currentAgent > i ? '✓' : task.currentAgent === i ? '●' : '○'} ${agent.split(' ')[0]}
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <div class="section-title">Agents (${selectedAgents.size})</div>
+                        <div class="agent-grid">
+                            ${agents.map(a => `
+                                <label class="agent-checkbox">
+                                    <input type="checkbox" value="${a.id}" ${selectedAgents.has(a.id) ? 'checked' : ''} onchange="toggleAgent('${a.id}')">
+                                    <span>${a.name}</span>
+                                </label>
+                            `).join('')}
                         </div>
-                    `).join('')}
-                </div>
-            `;
-        }
 
-        function renderApprovals() {
-            const pending = outputs.filter(o => o.status === 'pending');
-            const approved = outputs.filter(o => o.status === 'approved');
-            const rejected = outputs.filter(o => o.status === 'rejected');
+                        <button class="btn" onclick="executeTask()" style="margin-top: 16px;">▶️ Execute</button>
+                    </div>
+                `;
+            }
+            else if (currentView === 'approvals') {
+                const pending = outputs.filter(o => o.status === 'pending');
+                const approved = outputs.filter(o => o.status === 'approved');
 
-            return `
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
-                <div class="panel">
-                    <div class="panel-title">✅ Pending Approval (${pending.length})</div>
-
-                    ${pending.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No pending approvals</div>' :
-                      pending.map(output => {
-                        const task = tasks.find(t => t.id === output.taskId);
-                        const client = task && clients.find(c => c.id === task.clientId);
-                        return `
-                        <div style="margin-bottom: 16px;">
-                            ${client ? `
-                                <div class="client-panel">
-                                    <div class="client-name">${client.name}</div>
-                                    <div class="client-info">🏢 ${client.company}</div>
-                                    <div class="client-info">💼 ${client.designation}</div>
-                                    <div class="client-info">📧 ${client.email} | 📱 ${client.phone}</div>
-                                    <div class="client-info">📦 ${client.products}</div>
-                                    <div class="client-actions">
+                html = `
+                    <div class="panel">
+                        <div class="panel-title">✅ Pending Approvals (${pending.length})</div>
+                        ${pending.length === 0 ? '<p style="opacity: 0.6;">No pending approvals</p>' : ''}
+                        ${pending.map(o => {
+                            const task = tasks.find(t => t.id === o.taskId);
+                            const client = task && clients.find(c => c.id === task.clientId);
+                            return `
+                                ${client ? `
+                                    <div class="client-panel">
+                                        <div class="client-name">${client.name}</div>
+                                        <div class="client-info">🏢 ${client.company} | 💼 ${client.designation}</div>
+                                        <div class="client-info">📧 ${client.email} | 📱 ${client.phone}</div>
+                                        <div class="client-info">📦 ${client.products}</div>
                                         <a class="action-btn" href="tel:${client.phone}">📞 Call</a>
                                         <a class="action-btn" href="mailto:${client.email}">📧 Email</a>
                                         <a class="action-btn" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
                                         <a class="action-btn" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LinkedIn</a>
                                     </div>
-                                </div>
-                            ` : `
-                                <div style="background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 6px; padding: 12px; margin-bottom: 12px;">
-                                    <div style="font-size: 12px; font-weight: 600; color: var(--critical); margin-bottom: 8px;">⚠️ No Client Linked</div>
-                                    <div class="form-group" style="margin-bottom: 8px;">
-                                        <select class="form-select" style="font-size: 12px;" onchange="linkClientToOutput('${output.id}', this.value)">
-                                            <option value="">-- Select Existing Client --</option>
-                                            ${clients.map(c => `<option value="${c.id}">${c.name} (${c.company})</option>`).join('')}
-                                        </select>
-                                    </div>
-                                    <div style="font-size: 11px; opacity: 0.7;">Or create new client in Clients tab</div>
-                                </div>
-                            `}
-                            <div class="output-item">
-                                    <div class="client-name">${client.name}</div>
-                                    <div class="client-info">🏢 ${client.company}</div>
-                                    <div class="client-info">💼 ${client.designation}</div>
-                                    <div class="client-info">📧 ${client.email} | 📱 ${client.phone}</div>
-                                    <div class="client-info">📦 ${client.products}</div>
-                                    <div class="client-actions">
-                                        <a class="action-btn" href="tel:${client.phone}">📞 Call</a>
-                                        <a class="action-btn" href="mailto:${client.email}">📧 Email</a>
-                                        <a class="action-btn" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
-                                        <a class="action-btn" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LinkedIn</a>
+                                ` : '<div style="background: #fee2e2; padding: 8px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; color: #991b1b;">⚠️ No Client Linked</div>'}
+                                <div class="output-item">
+                                    <div class="output-agent">🤖 ${o.agent}</div>
+                                    <div class="output-content">${o.content}</div>
+                                    <div class="output-actions">
+                                        <button class="btn-small btn-approve" onclick="approveOutput('${o.id}')">✓ Approve</button>
+                                        <button class="btn-small btn-reject" onclick="rejectOutput('${o.id}')">✗ Reject</button>
                                     </div>
                                 </div>
-                            ` : ''}
-                            <div class="output-item">
-                                <div class="output-agent">🤖 ${output.agent}</div>
-                                <div class="output-content">${output.content}</div>
-                                <div class="output-actions">
-                                    <button class="btn-small btn-approve" onclick="approveOutput('${output.id}')">✓ Approve</button>
-                                    <button class="btn-small btn-reject" onclick="rejectOutput('${output.id}')">✗ Reject</button>
-                                </div>
-                            </div>
-                        </div>
-                    `}).join('')}
-                </div>
+                            `;
+                        }).join('')}
+                    </div>
 
-                <div class="panel">
-                    <div class="panel-title">✓ Approved (${approved.length})</div>
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        ${approved.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No approved outputs</div>' :
-                          approved.map(output => {
-                            const task = tasks.find(t => t.id === output.taskId);
+                    <div class="panel">
+                        <div class="panel-title">✓ Approved (${approved.length})</div>
+                        ${approved.map(o => {
+                            const task = tasks.find(t => t.id === o.taskId);
                             const client = task && clients.find(c => c.id === task.clientId);
                             return `
-                            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
                                 ${client ? `
-                                    <div style="font-size: 11px; font-weight: 600; color: var(--primary); margin-bottom: 6px;">
-                                        👤 ${client.name} | 🏢 ${client.company} | 💼 ${client.designation}
-                                    </div>
-                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 6px;">
-                                        📧 ${client.email} | 📱 ${client.phone} | 📦 ${client.products}
-                                    </div>
-                                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="tel:${client.phone}">📞 Call</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="mailto:${client.email}">📧 Email</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LI</a>
+                                    <div style="font-size: 11px; margin-bottom: 8px; padding: 8px; background: var(--bg); border-radius: 4px;">
+                                        <strong style="color: var(--primary);">👤 ${client.name}</strong><br>
+                                        🏢 ${client.company} | 💼 ${client.designation}<br>
+                                        📧 ${client.email} | 📱 ${client.phone}
                                     </div>
                                 ` : ''}
-                                <div style="font-size: 11px; font-weight: 600; color: var(--success); margin-bottom: 3px;">
-                                    🤖 ${output.agent}
+                                <div class="output-item">
+                                    <div class="output-agent">🤖 ${o.agent}</div>
+                                    <div class="output-content">${o.content.substring(0, 80)}...</div>
                                 </div>
-                                <div style="font-size: 11px; opacity: 0.7;">
-                                    ${output.content.substring(0, 80)}...
-                                </div>
-                            </div>
-                        `}).join('')}
+                            `;
+                        }).join('')}
                     </div>
-                </div>
+                `;
+            }
+            else if (currentView === 'clients') {
+                html = `
+                    <div class="panel">
+                        <div class="panel-title">👥 Clients</div>
 
-                <div class="panel">
-                    <div class="panel-title">✗ Rejected (${rejected.length})</div>
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        ${rejected.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No rejected outputs</div>' :
-                          rejected.map(output => {
-                            const task = tasks.find(t => t.id === output.taskId);
-                            const client = task && clients.find(c => c.id === task.clientId);
-                            return `
-                            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                                ${client ? `
-                                    <div style="font-size: 11px; font-weight: 600; color: var(--primary); margin-bottom: 6px;">
-                                        👤 ${client.name} | 🏢 ${client.company} | 💼 ${client.designation}
-                                    </div>
-                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 6px;">
-                                        📧 ${client.email} | 📱 ${client.phone} | 📦 ${client.products}
-                                    </div>
-                                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="tel:${client.phone}">📞 Call</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="mailto:${client.email}">📧 Email</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
-                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LI</a>
-                                    </div>
-                                ` : ''}
-                                <div style="font-size: 11px; font-weight: 600; color: var(--critical); margin-bottom: 3px;">
-                                    🤖 ${output.agent}
-                                </div>
-                                <div style="font-size: 11px; opacity: 0.7;">
-                                    ${output.content.substring(0, 80)}...
-                                </div>
-                            </div>
-                        `}).join('')}
-                    </div>
-                </div>
-                </div>
-            `;
-        }
-
-        function renderClients() {
-            return `
-                <div class="panel">
-                    <div class="panel-title">👥 Client Management</div>
-
-                    <div class="section-title">Add New Client</div>
-                    <div class="client-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <div class="form-label">Name</div>
-                                <input type="text" class="form-input" id="clientName" placeholder="Client Name">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-label">Designation</div>
-                                <input type="text" class="form-input" id="clientDesignation" placeholder="e.g., CEO, Manager">
-                            </div>
+                        <div class="section-title">Add New Client</div>
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-input" id="clientName" placeholder="Client name">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <div class="form-label">Company</div>
-                                <input type="text" class="form-input" id="clientCompany" placeholder="Company Name">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-label">Products/Services</div>
-                                <input type="text" class="form-input" id="clientProducts" placeholder="e.g., Software, Consulting">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Company</label>
+                            <input type="text" class="form-input" id="clientCompany" placeholder="Company">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <div class="form-label">Email</div>
-                                <input type="email" class="form-input" id="clientEmail" placeholder="name@company.com">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-label">Phone</div>
-                                <input type="tel" class="form-input" id="clientPhone" placeholder="+1234567890">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-input" id="clientDesignation" placeholder="CEO, Manager, etc">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Products/Services</label>
+                            <input type="text" class="form-input" id="clientProducts" placeholder="Products">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="clientEmail" placeholder="email@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="clientPhone" placeholder="+1234567890">
                         </div>
                         <button class="btn" onclick="addClient()">➕ Add Client</button>
-                    </div>
 
-                    <div class="section-title">Saved Clients (${clients.length})</div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
-                        ${clients.length === 0 ? '<div style="opacity: 0.6; font-size: 12px; grid-column: 1/-1;">No clients yet</div>' :
-                          clients.map(client => `
-                            <div class="client-form">
-                                <div style="font-weight: 600; color: var(--primary); margin-bottom: 8px;">${client.name}</div>
-                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">🏢 ${client.company}</div>
-                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">💼 ${client.designation}</div>
-                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 2px;">📦 ${client.products}</div>
-                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 8px;">📧 ${client.email}</div>
-                                <div style="font-size: 12px; opacity: 0.8; margin-bottom: 12px;">📱 ${client.phone}</div>
-                                <div style="display: flex; gap: 6px;">
-                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="tel:${client.phone}">📞 Call</a>
-                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="mailto:${client.email}">📧 Email</a>
-                                    <a class="action-btn" style="flex: 1; padding: 6px; font-size: 10px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
-                                </div>
-                                <button class="btn btn-secondary" style="width: 100%; margin-top: 8px; padding: 6px; font-size: 11px;" onclick="deleteClient('${client.id}')">🗑️ Delete</button>
+                        <div class="section-title">Saved Clients (${clients.length})</div>
+                        ${clients.map(c => `
+                            <div class="client-panel">
+                                <div class="client-name">${c.name}</div>
+                                <div class="client-info">🏢 ${c.company}</div>
+                                <div class="client-info">💼 ${c.designation}</div>
+                                <div class="client-info">📧 ${c.email} | 📱 ${c.phone}</div>
+                                <div class="client-info">📦 ${c.products}</div>
+                                <a class="action-btn" href="tel:${c.phone}">📞 Call</a>
+                                <a class="action-btn" href="mailto:${c.email}">📧 Email</a>
+                                <a class="action-btn" href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WhatsApp</a>
+                                <button class="btn-small" style="background: var(--critical); color: white; margin-top: 8px;" onclick="deleteClient('${c.id}')">🗑️ Delete</button>
                             </div>
                         `).join('')}
                     </div>
-                </div>
-            `;
-        }
-
-        function addClient() {
-            const name = document.getElementById('clientName').value;
-            const designation = document.getElementById('clientDesignation').value;
-            const company = document.getElementById('clientCompany').value;
-            const products = document.getElementById('clientProducts').value;
-            const email = document.getElementById('clientEmail').value;
-            const phone = document.getElementById('clientPhone').value;
-
-            if (!name || !email || !phone) {
-                alert('Please fill in Name, Email, and Phone');
-                return;
+                `;
             }
 
-            const client = {
-                id: `client-${Date.now()}`,
-                name,
-                designation,
-                company,
-                products,
-                email,
-                phone,
-                createdAt: new Date().toLocaleTimeString()
-            };
-
-            clients.push(client);
-            log(`Client added: ${name} from ${company}`);
-
-            // Clear form
-            document.getElementById('clientName').value = '';
-            document.getElementById('clientDesignation').value = '';
-            document.getElementById('clientCompany').value = '';
-            document.getElementById('clientProducts').value = '';
-            document.getElementById('clientEmail').value = '';
-            document.getElementById('clientPhone').value = '';
-
-            renderView();
+            content.innerHTML = html;
         }
 
-        function deleteClient(clientId) {
-            if (confirm('Delete this client?')) {
-                clients = clients.filter(c => c.id !== clientId);
-                log('Client deleted');
-                renderView();
-            }
-        }
-
-        function selectClient(clientId) {
-            if (clientId) {
-                selectedClient = clients.find(c => c.id === clientId);
+        function toggleAgent(id) {
+            if (selectedAgents.has(id)) {
+                selectedAgents.delete(id);
             } else {
-                selectedClient = null;
+                selectedAgents.add(id);
             }
-            renderView();
-        }
-
-        function toggleAgent(agentId) {
-            if (selectedAgents.has(agentId)) {
-                selectedAgents.delete(agentId);
-            } else {
-                selectedAgents.add(agentId);
-            }
+            renderContent();
         }
 
         function executeTask() {
             const name = document.getElementById('taskName').value;
             const desc = document.getElementById('taskDesc').value;
+            const clientId = document.getElementById('clientSelect').value;
 
             if (!name || selectedAgents.size === 0) {
-                alert('Enter task name and select at least one agent');
+                alert('Enter task name and select agents');
                 return;
             }
-
-            const agentList = Array.from(selectedAgents).map(id =>
-                agents.find(a => a.id === id)?.name || id
-            );
 
             const task = {
                 id: `task-${Date.now()}`,
                 name,
                 description: desc,
-                agents: agentList,
-                status: 'running',
-                currentAgent: 0,
-                clientId: selectedClient?.id || null,
-                createdAt: new Date().toLocaleTimeString()
+                clientId: clientId || null,
+                agents: Array.from(selectedAgents),
+                status: 'running'
             };
 
             tasks.push(task);
-            log(`Task "${name}" started with ${agentList.length} agents${selectedClient ? ` for ${selectedClient.name}` : ''}`);
 
-            // Simulate agent execution
-            executeAgentPipeline(task);
-
-            renderView();
-        }
-
-        function executeAgentPipeline(task) {
-            let agentIndex = 0;
-
-            const processNextAgent = () => {
-                if (agentIndex >= task.agents.length) {
-                    task.status = 'completed';
-                    log(`Task "${task.name}" completed ✓`);
-                    renderView();
-                    return;
-                }
-
-                const agent = task.agents[agentIndex];
-                task.currentAgent = agentIndex;
-                log(`Agent executing: ${agent}`);
-                renderView();
-
-                setTimeout(() => {
-                    const output = generateOutput(agent, task.description);
+            // Generate outputs
+            setTimeout(() => {
+                Array.from(selectedAgents).forEach(agentId => {
+                    const agent = agents.find(a => a.id === agentId);
                     outputs.push({
-                        id: `output-${Date.now()}-${agentIndex}`,
-                        agent: agent,
-                        content: output,
-                        status: 'pending',
+                        id: `out-${Date.now()}-${Math.random()}`,
                         taskId: task.id,
-                        createdAt: new Date().toLocaleTimeString()
+                        agent: agent.name,
+                        content: `Output from ${agent.name} for "${name}"`,
+                        status: 'pending'
                     });
+                });
+                task.status = 'completed';
+                renderContent();
+            }, 1000);
 
-                    log(`${agent} output ready for approval`);
-                    agentIndex++;
-                    renderView();
-
-                    // Continue to next agent after small delay
-                    setTimeout(processNextAgent, 1000);
-                }, 2000);
-            };
-
-            processNextAgent();
+            document.getElementById('taskName').value = '';
+            document.getElementById('taskDesc').value = '';
+            selectedAgents.clear();
+            renderContent();
         }
 
-        function generateOutput(agent, task) {
-            const outputs = {
-                'Lead Gen Agent': `Identified 15 high-quality leads matching: ${task}\n✓ 8 Grade A (high priority)\n✓ 5 Grade B (medium)\n✓ 2 Grade C (follow-up)\nTotal potential value: $520K`,
-                'Qualifier Agent': `Lead qualification complete:\n✓ 12 qualified (65% conversion probability)\n✓ 3 to nurture\nTop 3 prospects ready for sales team`,
-                'Pitch Agent': `Sales pitch generated for: ${task}\n"Discover how to ${task.toLowerCase()} with our proven system..."\n✓ 3 variations created\n✓ Ready for deployment`,
-                'Proposal Agent': `Professional proposal:\n✓ Custom pricing: $35K/year\n✓ Implementation: 2 weeks\n✓ Expected ROI: 3.2x\n✓ Support included`,
-                'Objection Agent': `Objection handling framework ready:\n"Too expensive?" → Break down ROI\n"Long implementation?" → Phased approach\n✓ 8 common objections covered`,
-                'Closer Agent': `Deal closure strategy:\n✓ Schedule call: Tomorrow 2pm\n✓ Send contract: Tonight\n✓ Close target: Friday\n✓ Incentive: 15% early bonus`
-            };
+        function addClient() {
+            const name = document.getElementById('clientName').value;
+            const company = document.getElementById('clientCompany').value;
+            const designation = document.getElementById('clientDesignation').value;
+            const products = document.getElementById('clientProducts').value;
+            const email = document.getElementById('clientEmail').value;
+            const phone = document.getElementById('clientPhone').value;
 
-            // Default for any agent
-            const defaultOutput = `${agent} processed request:\n✓ Analysis complete\n✓ Results ready for review\n✓ Quality score: 8.9/10`;
+            if (!name || !email || !phone) {
+                alert('Fill Name, Email, Phone');
+                return;
+            }
 
-            return outputs[agent] || defaultOutput;
+            clients.push({
+                id: `client-${Date.now()}`,
+                name, company, designation, products, email, phone
+            });
+
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientCompany').value = '';
+            document.getElementById('clientDesignation').value = '';
+            document.getElementById('clientProducts').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientPhone').value = '';
+
+            renderContent();
         }
 
-        function approveOutput(outputId) {
-            const output = outputs.find(o => o.id === outputId);
+        function deleteClient(id) {
+            clients = clients.filter(c => c.id !== id);
+            renderContent();
+        }
+
+        function approveOutput(id) {
+            const output = outputs.find(o => o.id === id);
             if (output) {
                 output.status = 'approved';
-                log(`Output APPROVED: ${output.agent}`);
-                renderView();
+                renderContent();
             }
         }
 
-        function rejectOutput(outputId) {
-            const output = outputs.find(o => o.id === outputId);
+        function rejectOutput(id) {
+            const output = outputs.find(o => o.id === id);
             if (output) {
                 output.status = 'rejected';
-                log(`Output REJECTED: ${output.agent}`);
-                renderView();
+                renderContent();
             }
         }
 
-        function linkClientToOutput(outputId, clientId) {
-            if (!clientId) return;
-
-            const output = outputs.find(o => o.id === outputId);
-            const client = clients.find(c => c.id === clientId);
-
-            if (output && client) {
-                const task = tasks.find(t => t.id === output.taskId);
-                if (task) {
-                    task.clientId = clientId;
-                    log(`Client linked: ${client.name} to output ${output.agent}`);
-                    renderView();
-                }
-            }
-        }
-
-        function saveTemplate() {
-            const name = document.getElementById('taskName').value;
-            const desc = document.getElementById('taskDesc').value;
-
-            if (!name) {
-                alert('Enter a task name to save template');
-                return;
-            }
-
-            if (selectedAgents.size === 0) {
-                alert('Select at least one agent');
-                return;
-            }
-
-            const agentList = Array.from(selectedAgents).map(id =>
-                agents.find(a => a.id === id)?.id
-            );
-
-            const template = {
-                id: `template-${Date.now()}`,
-                name,
-                description: desc,
-                agents: agentList,
-                clientId: selectedClient?.id || null,
-                createdAt: new Date().toLocaleTimeString()
-            };
-
-            templates.push(template);
-            log(`Template saved: ${name}`);
-            alert(`✓ Template "${name}" saved`);
-            renderView();
-        }
-
-        function openTemplateModal() {
-            const modal = document.getElementById('templateModal');
-            const list = document.getElementById('templateList');
-
-            if (templates.length === 0) {
-                list.innerHTML = '<div style="text-align: center; opacity: 0.6; padding: 20px;">No templates saved yet</div>';
-            } else {
-                list.innerHTML = templates.map(template => `
-                    <div class="template-item">
-                        <div class="template-name">${template.name}</div>
-                        <div class="template-desc">${template.description || 'No description'}</div>
-                        <div class="template-desc">Agents: ${template.agents.length} | ${template.clientId ? '✓ Client Linked' : 'No Client'}</div>
-                        <div class="template-actions">
-                            <button onclick="restoreTemplate('${template.id}')">📂 Load</button>
-                            <button class="delete" onclick="deleteTemplate('${template.id}')">🗑️ Delete</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function closeTemplateModal() {
-            document.getElementById('templateModal').style.display = 'none';
-        }
-
-        function restoreTemplate(templateId) {
-            const template = templates.find(t => t.id === templateId);
-            if (!template) return;
-
-            document.getElementById('taskName').value = template.name;
-            document.getElementById('taskDesc').value = template.description || '';
-
-            // Clear and select agents
-            selectedAgents.clear();
-            template.agents.forEach(agentId => selectedAgents.add(agentId));
-
-            // Select client if linked
-            if (template.clientId) {
-                selectedClient = clients.find(c => c.id === template.clientId);
-            } else {
-                selectedClient = null;
-            }
-
-            log(`Workflow restored: ${template.name}`);
-            closeTemplateModal();
-            currentView = 'execution';
-            renderView();
-        }
-
-        function deleteTemplate(templateId) {
-            if (confirm('Delete this template?')) {
-                templates = templates.filter(t => t.id !== templateId);
-                log('Template deleted');
-                openTemplateModal();
-            }
-        }
-
-        function log(message) {
-            activities.push({
-                time: new Date().toLocaleTimeString(),
-                text: message
-            });
-            if (activities.length > 100) activities.shift();
-        }
-
-        function exportData() {
-            const data = {
-                tasks,
-                outputs,
-                activities,
-                timestamp: new Date().toISOString()
-            };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `automation-hub-${Date.now()}.json`;
-            a.click();
-        }
-
-        function clearAll() {
-            if (confirm('Clear all data?')) {
-                tasks = [];
-                outputs = [];
-                activities = [];
-                selectedAgents.clear();
-                renderView();
-            }
-        }
-
-        function loadState() {
-            // Load any saved state here
-        }
-
-        // Auto-update
-        setInterval(() => {
-            if (currentView !== 'execution') renderView();
-        }, 2000);
+        // INIT
+        window.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+        });
     </script>
 </body>
 </html>
