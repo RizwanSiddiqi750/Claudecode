@@ -548,6 +548,89 @@
             margin-bottom: 8px;
         }
 
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .template-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-item:hover {
+            border-color: var(--primary);
+            background: rgba(11, 95, 127, 0.05);
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .template-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 8px;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .template-actions button {
+            flex: 1;
+            padding: 6px;
+            font-size: 11px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: var(--primary);
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .template-actions button:hover {
+            opacity: 0.9;
+        }
+
+        .template-actions button.delete {
+            background: var(--critical);
+        }
+
         @media (max-width: 1200px) {
             .content {
                 grid-template-columns: 1fr;
@@ -589,6 +672,17 @@
         </div>
     </div>
 
+    <!-- Template Modal -->
+    <div id="templateModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">📋 Saved Workflows</div>
+            <div id="templateList">
+                <div style="text-align: center; opacity: 0.6;">No templates saved yet</div>
+            </div>
+            <button class="btn btn-secondary" onclick="closeTemplateModal()" style="width: 100%; margin-top: 16px;">Close</button>
+        </div>
+    </div>
+
     <script>
         // Global State
         let agents = generateAgents();
@@ -599,6 +693,8 @@
         let selectedAgents = new Set();
         let clients = [];
         let selectedClient = null;
+        let templates = [];
+        let showTemplateModal = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             renderView();
@@ -770,7 +866,11 @@
                         `).join('')}
                     </div>
 
-                    <button class="btn" onclick="executeTask()" style="margin-top: 16px;">▶️ Execute Workflow</button>
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <button class="btn" onclick="executeTask()" style="flex: 2;">▶️ Execute Workflow</button>
+                        <button class="btn btn-secondary" onclick="saveTemplate()" style="flex: 1;">💾 Save Template</button>
+                        <button class="btn btn-secondary" onclick="openTemplateModal()" style="flex: 1;">📋 Templates (${templates.length})</button>
+                    </div>
                 </div>
 
                 <div class="panel full-width">
@@ -1096,6 +1196,98 @@
                 output.status = 'rejected';
                 log(`Output REJECTED: ${output.agent}`);
                 renderView();
+            }
+        }
+
+        function saveTemplate() {
+            const name = document.getElementById('taskName').value;
+            const desc = document.getElementById('taskDesc').value;
+
+            if (!name) {
+                alert('Enter a task name to save template');
+                return;
+            }
+
+            if (selectedAgents.size === 0) {
+                alert('Select at least one agent');
+                return;
+            }
+
+            const agentList = Array.from(selectedAgents).map(id =>
+                agents.find(a => a.id === id)?.id
+            );
+
+            const template = {
+                id: `template-${Date.now()}`,
+                name,
+                description: desc,
+                agents: agentList,
+                clientId: selectedClient?.id || null,
+                createdAt: new Date().toLocaleTimeString()
+            };
+
+            templates.push(template);
+            log(`Template saved: ${name}`);
+            alert(`✓ Template "${name}" saved`);
+            renderView();
+        }
+
+        function openTemplateModal() {
+            const modal = document.getElementById('templateModal');
+            const list = document.getElementById('templateList');
+
+            if (templates.length === 0) {
+                list.innerHTML = '<div style="text-align: center; opacity: 0.6; padding: 20px;">No templates saved yet</div>';
+            } else {
+                list.innerHTML = templates.map(template => `
+                    <div class="template-item">
+                        <div class="template-name">${template.name}</div>
+                        <div class="template-desc">${template.description || 'No description'}</div>
+                        <div class="template-desc">Agents: ${template.agents.length} | ${template.clientId ? '✓ Client Linked' : 'No Client'}</div>
+                        <div class="template-actions">
+                            <button onclick="restoreTemplate('${template.id}')">📂 Load</button>
+                            <button class="delete" onclick="deleteTemplate('${template.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').style.display = 'none';
+        }
+
+        function restoreTemplate(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            document.getElementById('taskName').value = template.name;
+            document.getElementById('taskDesc').value = template.description || '';
+
+            // Clear and select agents
+            selectedAgents.clear();
+            template.agents.forEach(agentId => selectedAgents.add(agentId));
+
+            // Select client if linked
+            if (template.clientId) {
+                selectedClient = clients.find(c => c.id === template.clientId);
+            } else {
+                selectedClient = null;
+            }
+
+            log(`Workflow restored: ${template.name}`);
+            closeTemplateModal();
+            currentView = 'execution';
+            renderView();
+        }
+
+        function deleteTemplate(templateId) {
+            if (confirm('Delete this template?')) {
+                templates = templates.filter(t => t.id !== templateId);
+                log('Template deleted');
+                openTemplateModal();
             }
         }
 
