@@ -905,7 +905,7 @@
 
             return `
                 <div class="panel full-width">
-                    <div class="panel-title">✅ Output Approval Queue</div>
+                    <div class="panel-title">✅ Pending Approval (${pending.length})</div>
 
                     ${pending.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No pending approvals</div>' :
                       pending.map(output => {
@@ -942,25 +942,69 @@
 
                 <div class="panel">
                     <div class="panel-title">✓ Approved (${approved.length})</div>
-                    <div style="max-height: 200px; overflow-y: auto;">
-                        ${approved.map(output => `
-                            <div style="padding: 8px; border-bottom: 1px solid var(--border); font-size: 12px;">
-                                <strong>${output.agent}</strong><br>
-                                <span style="opacity: 0.7;">${output.content.substring(0, 60)}...</span>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${approved.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No approved outputs</div>' :
+                          approved.map(output => {
+                            const task = tasks.find(t => t.id === output.taskId);
+                            const client = task && clients.find(c => c.id === task.clientId);
+                            return `
+                            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                ${client ? `
+                                    <div style="font-size: 11px; font-weight: 600; color: var(--primary); margin-bottom: 6px;">
+                                        👤 ${client.name} | 🏢 ${client.company} | 💼 ${client.designation}
+                                    </div>
+                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 6px;">
+                                        📧 ${client.email} | 📱 ${client.phone} | 📦 ${client.products}
+                                    </div>
+                                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="tel:${client.phone}">📞 Call</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="mailto:${client.email}">📧 Email</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LI</a>
+                                    </div>
+                                ` : ''}
+                                <div style="font-size: 11px; font-weight: 600; color: var(--success); margin-bottom: 3px;">
+                                    🤖 ${output.agent}
+                                </div>
+                                <div style="font-size: 11px; opacity: 0.7;">
+                                    ${output.content.substring(0, 80)}...
+                                </div>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                 </div>
 
                 <div class="panel">
                     <div class="panel-title">✗ Rejected (${rejected.length})</div>
-                    <div style="max-height: 200px; overflow-y: auto;">
-                        ${rejected.map(output => `
-                            <div style="padding: 8px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--critical);">
-                                <strong>${output.agent}</strong><br>
-                                <span style="opacity: 0.7;">${output.content.substring(0, 60)}...</span>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${rejected.length === 0 ? '<div style="opacity: 0.6; font-size: 12px;">No rejected outputs</div>' :
+                          rejected.map(output => {
+                            const task = tasks.find(t => t.id === output.taskId);
+                            const client = task && clients.find(c => c.id === task.clientId);
+                            return `
+                            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                ${client ? `
+                                    <div style="font-size: 11px; font-weight: 600; color: var(--primary); margin-bottom: 6px;">
+                                        👤 ${client.name} | 🏢 ${client.company} | 💼 ${client.designation}
+                                    </div>
+                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 6px;">
+                                        📧 ${client.email} | 📱 ${client.phone} | 📦 ${client.products}
+                                    </div>
+                                    <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="tel:${client.phone}">📞 Call</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="mailto:${client.email}">📧 Email</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://wa.me/${client.phone.replace(/[^0-9]/g, '')}" target="_blank">💬 WA</a>
+                                        <a class="action-btn" style="flex: 1; padding: 4px; font-size: 9px;" href="https://www.linkedin.com/search/results/people/?keywords=${client.name}" target="_blank">🔗 LI</a>
+                                    </div>
+                                ` : ''}
+                                <div style="font-size: 11px; font-weight: 600; color: var(--critical); margin-bottom: 3px;">
+                                    🤖 ${output.agent}
+                                </div>
+                                <div style="font-size: 11px; opacity: 0.7;">
+                                    ${output.content.substring(0, 80)}...
+                                </div>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                 </div>
             `;
