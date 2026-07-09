@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Automation Hub - All-in-One Platform</title>
+    <style>
+        :root {
+            --primary: #0b5f7f;
+            --accent: #d97706;
+            --success: #16a34a;
+            --critical: #dc2626;
+            --attention: #f59e0b;
+            --bg-light: #f9f8f6;
+            --bg-dark: #0d1117;
+            --text-light: #1f2937;
+            --text-dark: #f3f4f6;
+            --border-light: #e5e7eb;
+            --border-dark: #374151;
+            --surface-light: #ffffff;
+            --surface-dark: #1f2937;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: var(--bg-dark);
+                --text: var(--text-dark);
+                --border: var(--border-dark);
+                --surface: var(--surface-dark);
+            }
+        }
+
+        :root[data-theme="light"] {
+            --bg: var(--bg-light);
+            --text: var(--text-light);
+            --border: var(--border-light);
+            --surface: var(--surface-light);
+        }
+
+        :root[data-theme="dark"] {
+            --bg: var(--bg-dark);
+            --text: var(--text-dark);
+            --border: var(--border-dark);
+            --surface: var(--surface-dark);
+        }
+
+        :root {
+            --bg: var(--bg-light);
+            --text: var(--text-light);
+            --border: var(--border-light);
+            --surface: var(--surface-light);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text);
+            opacity: 0.7;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            padding: 10px 12px;
+            border-radius: 4px;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: var(--bg);
+            border-color: var(--border);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .nav-item-icon {
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .theme-selector {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .settings-btn {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            background: var(--bg);
+            border-color: var(--primary);
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-desc {
+            font-size: 12px;
+            color: var(--text);
+            opacity: 0.7;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        /* AGENTS LIST */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .agent-btn {
+            padding: 8px;
+            border: 2px solid var(--border);
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 11px;
+            color: var(--text);
+        }
+
+        .agent-btn:hover {
+            border-color: var(--primary);
+            background: var(--bg);
+        }
+
+        .agent-btn.selected {
+            border-color: var(--accent);
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .agent-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .agent-name {
+            font-weight: 600;
+        }
+
+        .agent-role {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        /* SELECTED AGENTS */
+        .selected-display {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 8px;
+            min-height: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: flex-start;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .agent-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .agent-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .agent-tag .remove:hover {
+            opacity: 1;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11, 95, 127, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 8px 12px;
+        }
+
+        /* PREVIEW */
+        .preview-area {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 12px;
+            min-height: 150px;
+            font-size: 12px;
+            color: var(--text);
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .console {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 8px;
+            min-height: 120px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--text);
+        }
+
+        .console-line {
+            padding: 2px 0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .console-time {
+            color: var(--text);
+            opacity: 0.5;
+            min-width: 50px;
+        }
+
+        .console-msg {
+            flex: 1;
+        }
+
+        .console-msg.success {
+            color: var(--success);
+        }
+
+        .console-msg.error {
+            color: var(--critical);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text);
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">
+                <span>⚙️</span>
+                <span>BizHub</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Tools</div>
+                <div class="nav-items">
+                    <div class="nav-item active" onclick="switchModule('agents')">
+                        <span class="nav-item-icon">🤖</span>
+                        <span>AI Agents</span>
+                    </div>
+                    <div class="nav-item" onclick="switchModule('website')">
+                        <span class="nav-item-icon">🌐</span>
+                        <span>Website Builder</span>
+                    </div>
+                    <div class="nav-item" onclick="switchModule('social')">
+                        <span class="nav-item-icon">📱</span>
+                        <span>Social Media Posts</span>
+                    </div>
+                    <div class="nav-item" onclick="switchModule('brand')">
+                        <span class="nav-item-icon">🎨</span>
+                        <span>Brand Tools</span>
+                    </div>
+                    <div class="nav-item" onclick="switchModule('email')">
+                        <span class="nav-item-icon">✉️</span>
+                        <span>Email Campaigns</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <label class="form-label">Theme</label>
+                <select class="theme-selector" onchange="setTheme(this.value)">
+                    <option value="light">☀️ Light</option>
+                    <option value="dark">🌙 Dark</option>
+                    <option value="auto">🔄 Auto</option>
+                </select>
+                <button class="settings-btn" onclick="showSettings()">⚙️ Settings</button>
+            </div>
+        </div>
+
+        <!-- MAIN -->
+        <div class="main">
+            <div class="header">
+                <div class="header-title" id="moduleTitle">🤖 AI Agent Studio</div>
+                <div class="header-controls">
+                    <button class="btn" onclick="exportConfig()">↓ Export</button>
+                    <button class="btn" onclick="importConfig()">↑ Import</button>
+                    <button class="btn btn-primary" onclick="executeCurrent()">▶️ Execute</button>
+                </div>
+            </div>
+
+            <div class="content" id="content"></div>
+        </div>
+    </div>
+
+    <script>
+        const agents = [
+            { id: 'lead-gen', name: 'Lead Gen', icon: '📍', role: 'Research' },
+            { id: 'qualification', name: 'Qualify', icon: '✅', role: 'Filter' },
+            { id: 'pitch', name: 'Pitch', icon: '💬', role: 'Outreach' },
+            { id: 'proposal', name: 'Proposal', icon: '📄', role: 'Docs' },
+            { id: 'objection', name: 'Objections', icon: '⚔️', role: 'Handle' },
+            { id: 'closing', name: 'Closing', icon: '🎉', role: 'Deal' }
+        ];
+
+        let selectedAgents = [];
+        let currentModule = 'agents';
+        let consoleLines = [];
+
+        const modules = {
+            agents: {
+                title: '🤖 AI Agent Studio',
+                render: renderAgentsModule
+            },
+            website: {
+                title: '🌐 Website Builder',
+                render: renderWebsiteModule
+            },
+            social: {
+                title: '📱 Social Media Posts',
+                render: renderSocialModule
+            },
+            brand: {
+                title: '🎨 Brand Tools',
+                render: renderBrandModule
+            },
+            email: {
+                title: '✉️ Email Campaigns',
+                render: renderEmailModule
+            }
+        };
+
+        function switchModule(module) {
+            currentModule = module;
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            renderModule();
+        }
+
+        function renderModule() {
+            document.getElementById('moduleTitle').textContent = modules[currentModule].title;
+            modules[currentModule].render();
+        }
+
+        function renderAgentsModule() {
+            document.getElementById('content').innerHTML = `
+                <div class="panel">
+                    <div class="panel-title">📋 Available Agents</div>
+                    <div class="panel-desc">Select agents for your agency</div>
+                    <div class="agents-grid" id="agentsGrid"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🎯 Create Agency</div>
+                    <div class="form-group">
+                        <label class="form-label">Agency Name</label>
+                        <input type="text" id="agencyName" placeholder="e.g., Enterprise Sales">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose</label>
+                        <textarea id="agencyPurpose" placeholder="What is this agency for?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Selected Agents</label>
+                        <div class="selected-display" id="selectedDisplay">No agents selected</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" onclick="clearAgents()">Clear</button>
+                        <button class="btn btn-primary" onclick="createAgency()">Create</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">📊 Console Output</div>
+                    <div class="console" id="console"></div>
+                </div>
+            `;
+
+            renderAgentsList();
+        }
+
+        function renderAgentsList() {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = agents.map(agent => `
+                <button class="agent-btn ${selectedAgents.includes(agent.id) ? 'selected' : ''}"
+                        onclick="toggleAgent('${agent.id}')">
+                    <div class="agent-icon">${agent.icon}</div>
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-role">${agent.role}</div>
+                </button>
+            `).join('');
+
+            updateSelectedDisplay();
+        }
+
+        function toggleAgent(id) {
+            selectedAgents = selectedAgents.includes(id)
+                ? selectedAgents.filter(a => a !== id)
+                : [...selectedAgents, id];
+            renderAgentsList();
+        }
+
+        function updateSelectedDisplay() {
+            const display = document.getElementById('selectedDisplay');
+            if (selectedAgents.length === 0) {
+                display.textContent = 'No agents selected';
+            } else {
+                display.innerHTML = selectedAgents.map(id => {
+                    const agent = agents.find(a => a.id === id);
+                    return `<span class="agent-tag">${agent.icon} ${agent.name}<span class="remove" onclick="toggleAgent('${id}')">×</span></span>`;
+                }).join('');
+            }
+        }
+
+        function clearAgents() {
+            selectedAgents = [];
+            renderAgentsList();
+        }
+
+        function createAgency() {
+            const name = document.getElementById('agencyName').value;
+            if (!name || selectedAgents.length === 0) {
+                alert('Enter name and select agents');
+                return;
+            }
+            logConsole('SYSTEM', `✓ Agency "${name}" created with ${selectedAgents.length} agents`, 'success');
+            document.getElementById('agencyName').value = '';
+            document.getElementById('agencyPurpose').value = '';
+            clearAgents();
+        }
+
+        function renderWebsiteModule() {
+            document.getElementById('content').innerHTML = `
+                <div class="panel">
+                    <div class="panel-title">🎨 Website Design</div>
+                    <div class="form-group">
+                        <label class="form-label">Website Name</label>
+                        <input type="text" placeholder="My Awesome Site">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea placeholder="What is your website about?"></textarea>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Design Website</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🎯 AI Agents for Content</div>
+                    <div class="agents-grid" id="websiteAgentsGrid"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">👁️ Preview</div>
+                    <div class="preview-area">Website preview will appear here...</div>
+                </div>
+            `;
+            renderAgentsList2('websiteAgentsGrid');
+        }
+
+        function renderSocialModule() {
+            document.getElementById('content').innerHTML = `
+                <div class="panel">
+                    <div class="panel-title">📝 Social Post Generator</div>
+                    <div class="form-group">
+                        <label class="form-label">Topic/Product</label>
+                        <input type="text" placeholder="What to promote?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Platform</label>
+                        <select>
+                            <option>Twitter</option>
+                            <option>LinkedIn</option>
+                            <option>Instagram</option>
+                            <option>Facebook</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Generate Post</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🤖 AI Support Agents</div>
+                    <div class="agents-grid" id="socialAgentsGrid"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">📱 Post Preview</div>
+                    <div class="preview-area">Your social post will appear here...</div>
+                </div>
+            `;
+            renderAgentsList2('socialAgentsGrid');
+        }
+
+        function renderBrandModule() {
+            document.getElementById('content').innerHTML = `
+                <div class="panel">
+                    <div class="panel-title">🎨 Brand Tools</div>
+                    <div class="form-group">
+                        <label class="form-label">Brand Name</label>
+                        <input type="text" placeholder="Your brand name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Brand Values</label>
+                        <textarea placeholder="What does your brand stand for?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tool Type</label>
+                        <select>
+                            <option>Logo Design</option>
+                            <option>Color Palette</option>
+                            <option>Brand Guidelines</option>
+                            <option>Promotion Campaign</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Generate Brand Assets</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🤖 Brand AI Agents</div>
+                    <div class="agents-grid" id="brandAgentsGrid"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🎯 Preview</div>
+                    <div class="preview-area">Brand assets will appear here...</div>
+                </div>
+            `;
+            renderAgentsList2('brandAgentsGrid');
+        }
+
+        function renderEmailModule() {
+            document.getElementById('content').innerHTML = `
+                <div class="panel">
+                    <div class="panel-title">✉️ Email Campaign</div>
+                    <div class="form-group">
+                        <label class="form-label">Email Subject</label>
+                        <input type="text" placeholder="Grab attention here">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Audience</label>
+                        <input type="text" placeholder="Who are you emailing?">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Body</label>
+                        <textarea placeholder="Your email content..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Generate Email</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">🤖 Email AI Agents</div>
+                    <div class="agents-grid" id="emailAgentsGrid"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">📧 Preview</div>
+                    <div class="preview-area">Email preview will appear here...</div>
+                </div>
+            `;
+            renderAgentsList2('emailAgentsGrid');
+        }
+
+        function renderAgentsList2(elementId) {
+            const grid = document.getElementById(elementId);
+            if (!grid) return;
+            grid.innerHTML = agents.map(agent => `
+                <button class="agent-btn ${selectedAgents.includes(agent.id) ? 'selected' : ''}"
+                        onclick="toggleAgent('${agent.id}')">
+                    <div class="agent-icon">${agent.icon}</div>
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-role">${agent.role}</div>
+                </button>
+            `).join('');
+        }
+
+        function executeCurrent() {
+            if (selectedAgents.length === 0) {
+                alert('Select agents first');
+                return;
+            }
+            logConsole('SYSTEM', `Executing with ${selectedAgents.length} agents...`);
+            selectedAgents.forEach((id, i) => {
+                const agent = agents.find(a => a.id === id);
+                setTimeout(() => {
+                    logConsole(agent.name, 'Processing...', 'info');
+                    setTimeout(() => {
+                        logConsole(agent.name, '✓ Complete', 'success');
+                    }, 800);
+                }, i * 1000);
+            });
+        }
+
+        function logConsole(agent, msg, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const line = `[${time}] ${agent}: ${msg}`;
+            consoleLines.push({ time, agent, msg, type });
+
+            const console = document.getElementById('console');
+            if (console) {
+                const div = document.createElement('div');
+                div.className = `console-line`;
+                div.innerHTML = `
+                    <span class="console-time">${time}</span>
+                    <span class="console-msg ${type}">${agent}: ${msg}</span>
+                `;
+                console.appendChild(div);
+                console.scrollTop = console.scrollHeight;
+            }
+        }
+
+        function setTheme(theme) {
+            if (theme === 'auto') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        function exportConfig() {
+            alert('Export: Download all configurations as JSON');
+        }
+
+        function importConfig() {
+            alert('Import: Load saved configurations from JSON');
+        }
+
+        function showSettings() {
+            alert('Settings: Configure API keys, integrations, and preferences');
+        }
+
+        // Initialize
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        document.querySelector('.theme-selector').value = savedTheme;
+        renderModule();
+    </script>
+</body>
+</html>
