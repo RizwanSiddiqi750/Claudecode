@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protection One Pakistan - Premium Security Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #E31E24;
+            --dark-bg: #0f172a;
+            --dark-surface: #1a2332;
+        }
+        * {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #c41820;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(227, 30, 36, 0.3);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(227, 30, 36, 0.2);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(227, 30, 36, 0.15);
+            border-color: var(--primary-red);
+        }
+        .badge-trust {
+            background: rgba(227, 30, 36, 0.1);
+            color: var(--primary-red);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0.25rem;
+        }
+        .tab-active {
+            border-bottom: 3px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--dark-bg);
+            border-top: 2px solid var(--primary-red);
+            z-index: 40;
+        }
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-menu.active {
+            max-height: 500px;
+        }
+        .traffic-alert {
+            background: rgba(227, 30, 36, 0.1);
+            border-left: 4px solid var(--primary-red);
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+        }
+        .video-placeholder {
+            background: linear-gradient(135deg, #1a2332 0%, #0f172a 100%);
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 2px solid rgba(227, 30, 36, 0.2);
+        }
+        .ads-placeholder {
+            background: linear-gradient(135deg, rgba(227, 30, 36, 0.05) 0%, rgba(227, 30, 36, 0.02) 100%);
+            border: 2px dashed rgba(227, 30, 36, 0.3);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: rgba(227, 30, 36, 0.6);
+            font-weight: 600;
+        }
+        .testimonial-slide {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .testimonial-slide.active {
+            opacity: 1;
+        }
+        .pulse-ring {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <div class="text-2xl font-bold">
+                        <span style="color: var(--primary-red);">Protection</span> One
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#services" class="text-gray-700 hover:text-red-600 transition">Services</a>
+                    <a href="#why-us" class="text-gray-700 hover:text-red-600 transition">Why Us</a>
+                    <a href="#traffic-hub" class="text-gray-700 hover:text-red-600 transition">Traffic Hub</a>
+                    <a href="#contact" class="text-gray-700 hover:text-red-600 transition">Contact</a>
+                    <a href="tel:+923001234567" class="flex items-center text-gray-700 hover:text-red-600">
+                        <i class="fas fa-phone mr-2"></i> +92 300 123 4567
+                    </a>
+                </div>
+
+                <!-- Social & CTA -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="https://facebook.com/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fab fa-facebook text-lg"></i>
+                    </a>
+                    <a href="https://instagram.com/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fab fa-instagram text-lg"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fab fa-linkedin text-lg"></i>
+                    </a>
+                    <button onclick="scrollToForm()" class="btn-primary px-6 py-2 rounded-lg font-semibold text-sm">Quick Quote</button>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="mobile-menu md:hidden bg-gray-50">
+                <div class="px-4 py-4 space-y-4">
+                    <a href="#services" class="block text-gray-700 hover:text-red-600">Services</a>
+                    <a href="#why-us" class="block text-gray-700 hover:text-red-600">Why Us</a>
+                    <a href="#traffic-hub" class="block text-gray-700 hover:text-red-600">Traffic Hub</a>
+                    <a href="#contact" class="block text-gray-700 hover:text-red-600">Contact</a>
+                    <a href="tel:+923001234567" class="block text-gray-700 hover:text-red-600 font-semibold">
+                        <i class="fas fa-phone mr-2"></i> +92 300 123 4567
+                    </a>
+                    <div class="flex space-x-4 pt-4">
+                        <a href="https://facebook.com/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                        <a href="https://instagram.com/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/protectiononepk" target="_blank" class="text-gray-600 hover:text-red-600">
+                            <i class="fab fa-linkedin text-lg"></i>
+                        </a>
+                    </div>
+                    <button onclick="scrollToForm()" class="btn-primary w-full px-6 py-2 rounded-lg font-semibold">Quick Quote</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-32 pb-20 px-4 text-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-6">
+                <span class="badge-trust" style="background: rgba(227, 30, 36, 0.2); color: white;">🛡️ ISO Certified | 24/7 Control Room | NADRA Cleared Guards</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                Enterprise-Grade Security for <span style="color: var(--primary-red);">Modern Pakistan</span>
+            </h1>
+            <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+                From Karachi to Islamabad, we protect what matters most. Premium executive protection, biometric-verified guards, and real-time surveillance powered by cutting-edge technology.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToForm()" class="btn-primary px-8 py-4 rounded-lg font-bold text-lg flex items-center justify-center">
+                    <i class="fas fa-shield-alt mr-2"></i> Request Free Security Assessment
+                </button>
+                <a href="tel:+923001234567" class="bg-white text-gray-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition flex items-center justify-center">
+                    <i class="fas fa-phone mr-2"></i> Call Now: +92 300 123 4567
+                </a>
+            </div>
+            <div class="mt-12 grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+                <div>
+                    <p class="text-3xl font-bold">500+</p>
+                    <p class="text-gray-400">Corporate Clients</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold">24/7</p>
+                    <p class="text-gray-400">Elite Response</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-bold">15+</p>
+                    <p class="text-gray-400">Years Proven</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <section class="bg-white py-12 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-center text-gray-600 font-semibold mb-8">Trusted by Pakistan's Leading Organizations</p>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+                <div class="h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <i class="fas fa-building mr-2"></i> Corporate Client 1
+                </div>
+                <div class="h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <i class="fas fa-building mr-2"></i> Corporate Client 2
+                </div>
+                <div class="h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <i class="fas fa-certificate mr-2"></i> ISO Certified
+                </div>
+                <div class="h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <i class="fas fa-building mr-2"></i> Corporate Client 3
+                </div>
+                <div class="h-12 bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <i class="fas fa-building mr-2"></i> Corporate Client 4
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 px-4 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Comprehensive Security Solutions</h2>
+                <p class="text-xl text-gray-600">Tailored protection strategies for corporate, residential, and high-net-worth clients across Pakistan</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Service Card 1 -->
+                <div class="card-hover bg-white p-8 rounded-xl">
+                    <div class="text-4xl mb-4" style="color: var(--primary-red);">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Executive Protection</h3>
+                    <p class="text-gray-600 mb-4">Elite close protection teams for high-profile individuals, dignitary movements, and sensitive assignments.</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Advanced threat assessment</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Armed & unarmed options</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Real-time coordination</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="card-hover bg-white p-8 rounded-xl">
+                    <div class="text-4xl mb-4" style="color: var(--primary-red);">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Corporate Guarding</h3>
+                    <p class="text-gray-600 mb-4">Professional security personnel for offices, factories, warehouses, and commercial establishments nationwide.</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Biometric-verified staff</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> NADRA clearance</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> 24/7 scheduling</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="card-hover bg-white p-8 rounded-xl">
+                    <div class="text-4xl mb-4" style="color: var(--primary-red);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Smart Surveillance</h3>
+                    <p class="text-gray-600 mb-4">AI-powered CCTV systems, thermal imaging, and intelligent monitoring for predictive threat detection.</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> 4K HD camera networks</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> AI threat detection</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Cloud backup & analytics</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="card-hover bg-white p-8 rounded-xl">
+                    <div class="text-4xl mb-4" style="color: var(--primary-red);">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Cyber & Tech Security</h3>
+                    <p class="text-gray-600 mb-4">Integrated cybersecurity, access control systems, and technical risk management for modern enterprises.</p>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Biometric access control</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> IT security audits</li>
+                        <li><i class="fas fa-check" style="color: var(--primary-red);" class="mr-2"></i> Incident response</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why-us" class="py-20 px-4 hero-gradient text-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Why Pakistan Chooses Protection One</h2>
+                    <p class="text-gray-300 mb-8 text-lg">We're not just another security agency. We're Pakistan's benchmark for elite protection services, combining international best practices with local expertise.</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full" style="background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 12px;">✓</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Biometric-Verified Personnel</h4>
+                                <p class="text-gray-400">Every guard screened through NADRA, trained by ex-military professionals, and equipped with real-time accountability systems.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full" style="background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 12px;">✓</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Advanced Response Force</h4>
+                                <p class="text-gray-400">Strategic Quick Response Teams positioned across Karachi, Lahore, Islamabad, and Rawalpindi for sub-10-minute deployments.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full" style="background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 12px;">✓</div>
+                            <div>
+                                <h4 class="font-bold text-lg">24/7 Control Room Monitoring</h4>
+                                <p class="text-gray-400">State-of-the-art command center with GPS tracking, live surveillance feeds, and integrated emergency protocols operating continuously.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full" style="background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 12px;">✓</div>
+                            <div>
+                                <h4 class="font-bold text-lg">ISO 9001:2015 Certified</h4>
+                                <p class="text-gray-400">International quality standards ensure consistent, dependable security across every client engagement nationwide.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full" style="background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 12px;">✓</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Smart Technology Integration</h4>
+                                <p class="text-gray-400">AI-powered CCTV, mobile app monitoring, and predictive threat analytics for smarter, more efficient security management.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="bg-white/10 backdrop-blur p-8 rounded-xl border border-white/20">
+                        <h3 class="text-2xl font-bold mb-6">Our Commitment to Excellence</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Client Satisfaction Rate</span>
+                                    <span class="text-lg font-bold">98%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 98%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Average Response Time</span>
+                                    <span class="text-lg font-bold">8 min</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Coverage Across Pakistan</span>
+                                    <span class="text-lg font-bold">4 Regions</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Pakistan Traffic Hub -->
+    <section id="traffic-hub" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Live Pakistan Traffic Hub</h2>
+                <p class="text-xl text-gray-600">Real-time Safe City surveillance feeds & traffic intelligence for Karachi, Lahore, Islamabad & Rawalpindi</p>
+            </div>
+
+            <!-- City Tabs -->
+            <div class="flex flex-wrap gap-4 mb-8 border-b border-gray-200">
+                <button onclick="switchCity('karachi')" class="city-tab py-3 px-6 font-semibold text-gray-700 hover:text-red-600 transition tab-active" data-city="karachi">
+                    <i class="fas fa-city mr-2"></i> Karachi
+                </button>
+                <button onclick="switchCity('lahore')" class="city-tab py-3 px-6 font-semibold text-gray-700 hover:text-red-600 transition" data-city="lahore">
+                    <i class="fas fa-city mr-2"></i> Lahore
+                </button>
+                <button onclick="switchCity('islamabad')" class="city-tab py-3 px-6 font-semibold text-gray-700 hover:text-red-600 transition" data-city="islamabad">
+                    <i class="fas fa-city mr-2"></i> Islamabad
+                </button>
+                <button onclick="switchCity('rawalpindi')" class="city-tab py-3 px-6 font-semibold text-gray-700 hover:text-red-600 transition" data-city="rawalpindi">
+                    <i class="fas fa-city mr-2"></i> Rawalpindi
+                </button>
+            </div>
+
+            <!-- Traffic Hub Content Grid -->
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Video Feed -->
+                <div class="lg:col-span-2">
+                    <div class="video-placeholder">
+                        <div class="text-center">
+                            <i class="fas fa-video text-4xl text-gray-600 mb-4"></i>
+                            <p class="text-gray-600 font-semibold" id="videoTitle">Safe City Live Feed - Karachi Metropolitan Area</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-2" style="color: var(--primary-red);"></i>
+                            <strong>Powered by Protection One's Advanced Surveillance Network</strong> - Integration with Safe City cameras for public traffic monitoring and emergency coordination.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Traffic Alerts Sidebar -->
+                <div class="lg:col-span-1">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2" style="color: var(--primary-red);"></i> Live Alerts
+                    </h3>
+                    <div id="alertsContainer">
+                        <div class="traffic-alert">
+                            <div class="font-bold text-sm mb-1">⚠️ High Traffic - GT Road</div>
+                            <p class="text-xs text-gray-600">Congestion from Karachi Port Trust to Clifton Bridge. Expected delays 25-30 min.</p>
+                        </div>
+                        <div class="traffic-alert">
+                            <div class="font-bold text-sm mb-1">🚨 Accident Alert - M.A. Jinnah Road</div>
+                            <p class="text-xs text-gray-600">Minor collision near Saddar area. Traffic diverted to alternative routes. Cleared.</p>
+                        </div>
+                        <div class="traffic-alert">
+                            <div class="font-bold text-sm mb-1">✅ Clear - Defence Area</div>
+                            <p class="text-xs text-gray-600">All routes operational. Green light for smooth commute through DHA Phase 5-7.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad Placements -->
+            <div class="grid md:grid-cols-2 gap-8 mt-12">
+                <div class="ads-placeholder h-32">
+                    Google AdSense Placement<br>Leaderboard [728x90]
+                </div>
+                <div class="ads-placeholder h-32">
+                    Google AdSense Placement<br>Rectangle [300x250]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Capture Form -->
+    <section id="contact" class="py-20 px-4 hero-gradient text-white">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Get Your Free Security Assessment</h2>
+                <p class="text-gray-300 text-lg">Our security experts will evaluate your needs and provide a customized protection plan—no obligation.</p>
+            </div>
+
+            <form id="leadForm" class="bg-white/10 backdrop-blur p-8 rounded-xl border border-white/20 space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Full Name *</label>
+                        <input type="text" placeholder="Your Name" required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Company Name *</label>
+                        <input type="text" placeholder="Your Company" required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Phone Number *</label>
+                        <input type="tel" placeholder="+92 300 XXX XXXX" required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">City *</label>
+                        <select required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-red-500 transition">
+                            <option value="" class="text-gray-900">Select Your City</option>
+                            <option value="karachi" class="text-gray-900">Karachi</option>
+                            <option value="lahore" class="text-gray-900">Lahore</option>
+                            <option value="islamabad" class="text-gray-900">Islamabad</option>
+                            <option value="rawalpindi" class="text-gray-900">Rawalpindi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Service Required *</label>
+                    <select required class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-red-500 transition">
+                        <option value="" class="text-gray-900">Select a Service</option>
+                        <option value="executive" class="text-gray-900">Executive Protection</option>
+                        <option value="corporate" class="text-gray-900">Corporate Guarding</option>
+                        <option value="surveillance" class="text-gray-900">Smart Surveillance</option>
+                        <option value="cyber" class="text-gray-900">Cyber & Tech Security</option>
+                        <option value="other" class="text-gray-900">Other / Consultation</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Message (Optional)</label>
+                    <textarea placeholder="Tell us about your security needs..." rows="4" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-red-500 transition"></textarea>
+                </div>
+
+                <div class="flex items-center">
+                    <input type="checkbox" required class="mr-3" id="consent">
+                    <label for="consent" class="text-sm text-gray-300">
+                        I consent to Protection One contacting me regarding my security assessment.
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full btn-primary py-4 rounded-lg font-bold text-lg flex items-center justify-center">
+                    <i class="fas fa-paper-plane mr-2"></i> Get Free Assessment
+                </button>
+
+                <p class="text-xs text-gray-400 text-center">
+                    We respect your privacy. Your information is secure and will only be used to provide your security assessment.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 px-4 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Trusted by Pakistan's Leaders</h2>
+                <p class="text-xl text-gray-600">Real testimonials from corporate executives and VIPs who depend on Protection One</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-slide active bg-white p-8 rounded-xl shadow-lg border-l-4" style="border-color: var(--primary-red);">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                        <div>
+                            <p class="font-bold text-gray-900">Ahmed Hassan</p>
+                            <p class="text-sm text-gray-600">Managing Director, Tech Solutions Ltd.</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-700">
+                        "Protection One's executive protection team is exceptional. Highly trained, discreet, and always one step ahead. They've transformed how our leadership travels securely across Pakistan."
+                    </p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-slide bg-white p-8 rounded-xl shadow-lg border-l-4" style="border-color: var(--primary-red);">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                        <div>
+                            <p class="font-bold text-gray-900">Fatima Khan</p>
+                            <p class="text-sm text-gray-600">CFO, Real Estate Development Corp.</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-700">
+                        "Their Smart Surveillance system gives us complete peace of mind. Real-time monitoring, AI threat detection, and instant alerts. Best security investment we've made."
+                    </p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-slide bg-white p-8 rounded-xl shadow-lg border-l-4" style="border-color: var(--primary-red);">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
+                        <div>
+                            <p class="font-bold text-gray-900">Dr. Imran Malik</p>
+                            <p class="text-sm text-gray-600">Director, International Trade Services</p>
+                        </div>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-700">
+                        "Switching to Protection One was the smartest decision. Their NADRA-cleared guards and biometric verification system eliminated our security concerns entirely. Truly professional."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky Footer CTA -->
+    <section class="sticky-footer py-6 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-white text-center sm:text-left">
+                <p class="font-semibold">Need immediate security support?</p>
+                <p class="text-gray-400 text-sm">Available 24/7 across Karachi, Lahore, Islamabad & Rawalpindi</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="tel:+923001234567" class="bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center whitespace-nowrap">
+                    <i class="fas fa-phone mr-2"></i> Emergency: +92 300 123 4567
+                </a>
+                <button onclick="scrollToForm()" class="btn-primary px-6 py-3 rounded-lg font-bold flex items-center justify-center whitespace-nowrap">
+                    <i class="fas fa-shield-alt mr-2"></i> Get Free Assessment
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h4 class="text-white font-bold mb-4">Protection One</h4>
+                    <p class="text-sm mb-4">Pakistan's premier provider of enterprise-grade security solutions for corporate and residential clients.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://facebook.com/protectiononepk" target="_blank" class="hover:text-red-600 transition">
+                            <i class="fab fa-facebook text-lg"></i>
+                        </a>
+                        <a href="https://instagram.com/protectiononepk" target="_blank" class="hover:text-red-600 transition">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/protectiononepk" target="_blank" class="hover:text-red-600 transition">
+                            <i class="fab fa-linkedin text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#services" class="hover:text-red-600 transition">Executive Protection</a></li>
+                        <li><a href="#services" class="hover:text-red-600 transition">Corporate Guarding</a></li>
+                        <li><a href="#services" class="hover:text-red-600 transition">Smart Surveillance</a></li>
+                        <li><a href="#services" class="hover:text-red-600 transition">Cyber Security</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Coverage Areas</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>Karachi Metropolitan</li>
+                        <li>Lahore & Punjab</li>
+                        <li>Islamabad & Rawalpindi</li>
+                        <li>Nationwide Consultancy</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="tel:+923001234567" class="hover:text-red-600 transition"><i class="fas fa-phone mr-2"></i>+92 300 123 4567</a></li>
+                        <li><a href="mailto:info@protectiononepk.com" class="hover:text-red-600 transition"><i class="fas fa-envelope mr-2"></i>info@protectiononepk.com</a></li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Karachi, Pakistan</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-sm">
+                <p>&copy; 2024 Protection One Pakistan. All rights reserved. | ISO 9001:2015 Certified | NADRA Approved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Scroll to Form
+        function scrollToForm() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // City Traffic Hub Switcher
+        function switchCity(city) {
+            const cityData = {
+                karachi: {
+                    title: 'Safe City Live Feed - Karachi Metropolitan Area',
+                    alerts: [
+                        { icon: '⚠️', title: 'High Traffic - GT Road', desc: 'Congestion from Karachi Port Trust to Clifton Bridge. Expected delays 25-30 min.' },
+                        { icon: '🚨', title: 'Accident Alert - M.A. Jinnah Road', desc: 'Minor collision near Saddar area. Traffic diverted to alternative routes. Cleared.' },
+                        { icon: '✅', title: 'Clear - Defence Area', desc: 'All routes operational. Green light for smooth commute through DHA Phase 5-7.' }
+                    ]
+                },
+                lahore: {
+                    title: 'Safe City Live Feed - Lahore Metropolitan Area',
+                    alerts: [
+                        { icon: '⚠️', title: 'Traffic Build-up - Canal Road', desc: 'Moderate congestion near Thokar Niaz Baig. Alternate via Mall Road recommended. 15 min delays.' },
+                        { icon: '✅', title: 'Clear - Gulberg Area', desc: 'All main routes open. Smooth flow through G.O.R Park and Racecourse areas.' },
+                        { icon: '🚨', title: 'Speed Enforcement - Mall Road', desc: 'Enhanced traffic monitoring near Fortress Stadium. Follow speed limits.' }
+                    ]
+                },
+                islamabad: {
+                    title: 'Safe City Live Feed - Islamabad Metropolitan Area',
+                    alerts: [
+                        { icon: '✅', title: 'Clear - Capital Expressway', desc: 'All lanes operational. Smooth traffic flow through G-9 and G-10 sectors.' },
+                        { icon: '⚠️', title: 'Light Traffic - Margalla Avenue', desc: 'Minor congestion near Blue Area. Proceed with caution. 10 min delays expected.' },
+                        { icon: '✅', title: 'Clear - Faisal Avenue', desc: 'Green light status for all major intersections. Perfect commute conditions.' }
+                    ]
+                },
+                rawalpindi: {
+                    title: 'Safe City Live Feed - Rawalpindi Metropolitan Area',
+                    alerts: [
+                        { icon: '⚠️', title: 'Moderate Traffic - Benazir Road', desc: 'Peak hour congestion near army headquarters. Alternative routes active. 20 min delays.' },
+                        { icon: '✅', title: 'Clear - Liaquat Road', desc: 'All lanes open. Smooth flow through Rajah Bazaar and downtown areas.' },
+                        { icon: '🚨', title: 'Alert - Convention Drive', desc: 'Event traffic management in effect. Plan your route accordingly.' }
+                    ]
+                }
+            };
+
+            // Update tabs
+            document.querySelectorAll('.city-tab').forEach(tab => {
+                tab.classList.remove('tab-active');
+            });
+            document.querySelector(`[data-city="${city}"]`).classList.add('tab-active');
+
+            // Update content
+            const data = cityData[city];
+            document.getElementById('videoTitle').textContent = data.title;
+
+            // Update alerts
+            const alertsContainer = document.getElementById('alertsContainer');
+            alertsContainer.innerHTML = data.alerts.map(alert => `
+                <div class="traffic-alert">
+                    <div class="font-bold text-sm mb-1">${alert.icon} ${alert.title}</div>
+                    <p class="text-xs text-gray-600">${alert.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // Form Submission Handler
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your inquiry! A Protection One security expert will contact you within 2 hours. Emergency? Call +92 300 123 4567');
+            this.reset();
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            switchCity('karachi');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protection One Pakistan - Live Traffic Safety Hub & Premium Security</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #E31E24;
+            --dark-bg: #0a0f1b;
+            --dark-surface: #121829;
+            --dark-card: #1a2332;
+        }
+        * {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: #e5e7eb;
+        }
+        .brand-color {
+            color: var(--primary-red);
+        }
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary:hover {
+            background: #c41820;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(227, 30, 36, 0.25);
+        }
+        .nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 15, 27, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(227, 30, 36, 0.1);
+        }
+        .ad-placeholder {
+            background: linear-gradient(135deg, rgba(227, 30, 36, 0.05) 0%, rgba(10, 15, 27, 0.8) 100%);
+            border: 2px dashed rgba(227, 30, 36, 0.4);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: rgba(227, 30, 36, 0.7);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+            position: relative;
+        }
+        .ad-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(227, 30, 36, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            color: rgba(227, 30, 36, 0.8);
+        }
+        .live-badge {
+            background: var(--primary-red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            animation: pulse 1.5s infinite;
+        }
+        .live-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .video-player-mock {
+            background: linear-gradient(135deg, #1a2332 0%, #0f172a 100%);
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(227, 30, 36, 0.2);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-player-mock::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+        }
+        .traffic-ticker {
+            background: rgba(227, 30, 36, 0.08);
+            border-left: 4px solid var(--primary-red);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: #d1d5db;
+        }
+        .traffic-ticker strong {
+            color: var(--primary-red);
+            font-weight: 700;
+        }
+        .tab-button {
+            padding: 12px 20px;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: #9ca3af;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .tab-button.active {
+            border-bottom-color: var(--primary-red);
+            color: var(--primary-red);
+        }
+        .tab-button:hover {
+            color: var(--primary-red);
+        }
+        .form-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(227, 30, 36, 0.3);
+            color: #e5e7eb;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .form-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+        }
+        .form-input::placeholder {
+            color: rgba(229, 231, 235, 0.5);
+        }
+        .service-card {
+            background: linear-gradient(135deg, rgba(227, 30, 36, 0.08) 0%, rgba(26, 35, 50, 0.4) 100%);
+            border: 1px solid rgba(227, 30, 36, 0.2);
+            padding: 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            border-color: var(--primary-red);
+            background: linear-gradient(135deg, rgba(227, 30, 36, 0.12) 0%, rgba(26, 35, 50, 0.5) 100%);
+            transform: translateY(-4px);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-surface) 50%, var(--dark-card) 100%);
+        }
+        .trust-badge {
+            background: rgba(227, 30, 36, 0.12);
+            border: 1px solid rgba(227, 30, 36, 0.3);
+            color: var(--primary-red);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 6px;
+            letter-spacing: 0.3px;
+        }
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-menu.active {
+            max-height: 600px;
+        }
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--dark-bg);
+            border-top: 2px solid var(--primary-red);
+            z-index: 40;
+            backdrop-filter: blur(10px);
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #9ca3af;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .player-location-tag {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #f3f4f6;
+            font-weight: 600;
+            z-index: 10;
+            border-left: 3px solid var(--primary-red);
+        }
+        .player-controls {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .control-btn {
+            background: rgba(227, 30, 36, 0.8);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+        .control-btn:hover {
+            background: var(--primary-red);
+            transform: scale(1.05);
+        }
+        .seo-content {
+            background: rgba(18, 24, 41, 0.6);
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid rgba(227, 30, 36, 0.15);
+            line-height: 1.7;
+            color: #d1d5db;
+            font-size: 0.975rem;
+        }
+        .seo-content strong {
+            color: var(--primary-red);
+        }
+        .location-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-red);
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-950">
+
+    <!-- Navigation Bar (Sticky) -->
+    <nav class="nav-sticky">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="hidden sm:block text-white font-bold tracking-tight">
+                        <span class="brand-color">PROTECTION</span> ONE PAKISTAN
+                    </span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="tel:+923001234567" class="flex items-center space-x-2 text-gray-300 hover:brand-color transition">
+                        <i class="fas fa-phone text-lg brand-color"></i>
+                        <span class="font-semibold">+92 300 123 4567</span>
+                    </a>
+                    <a href="https://facebook.com/protectiononepk" target="_blank" title="Facebook" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://instagram.com/protectiononepk" target="_blank" title="Instagram" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/protectiononepk" target="_blank" title="LinkedIn" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <button onclick="scrollToForm()" class="btn-primary px-6 py-2 rounded-lg text-sm">
+                        <i class="fas fa-paper-plane mr-2"></i>Get Quote
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="mobile-menu md:hidden bg-gray-900/50 backdrop-blur">
+                <div class="px-4 py-4 space-y-4 border-t border-gray-800">
+                    <a href="tel:+923001234567" class="block text-gray-300 hover:brand-color font-semibold">
+                        <i class="fas fa-phone mr-2 brand-color"></i> Call: +92 300 123 4567
+                    </a>
+                    <div class="flex space-x-4 pt-2">
+                        <a href="https://facebook.com/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color text-lg">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://instagram.com/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color text-lg">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://linkedin.com/company/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color text-lg">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                    <button onclick="scrollToForm()" class="btn-primary w-full px-4 py-2 rounded-lg text-sm">
+                        <i class="fas fa-paper-plane mr-2"></i>Get Quote
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Premium Header Ad Space -->
+    <div class="bg-gray-900/50 border-b border-gray-800 px-4 sm:px-6 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="ad-placeholder h-24 flex items-center justify-center">
+                <div class="text-center">
+                    <div class="text-red-500 text-sm font-bold mb-1">📺 GOOGLE ADSENSE</div>
+                    <div class="text-xs">Leaderboard Ad [970x90 or 728x90]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section (Google Ads Conversion Zone) -->
+    <section class="hero-gradient py-20 px-4 sm:px-6 lg:px-8 border-b border-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="flex justify-center gap-3 mb-6 flex-wrap">
+                    <span class="trust-badge">
+                        <i class="fas fa-check-circle mr-2"></i> NADRA & Police Vetted
+                    </span>
+                    <span class="trust-badge">
+                        <i class="fas fa-clock mr-2"></i> 24/7 Operations Room
+                    </span>
+                    <span class="trust-badge">
+                        <i class="fas fa-certificate mr-2"></i> ISO 9001:2015
+                    </span>
+                </div>
+                <h1 class="section-title text-white mb-6 leading-tight">
+                    Enterprise Security That <span class="brand-color">Stays Alert While You Sleep</span>
+                </h1>
+                <p class="section-subtitle max-w-3xl mx-auto">
+                    Premium executive protection, biometric-verified guards, and AI-powered surveillance for Pakistan's most demanding organizations. Trusted by corporate leaders, government dignitaries, and Fortune-500 regional offices.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="tel:+923001234567" class="btn-primary px-8 py-4 rounded-lg text-lg flex items-center justify-center whitespace-nowrap hover:shadow-xl">
+                        <i class="fas fa-phone mr-2"></i> Call Emergency Hotline
+                    </a>
+                    <button onclick="scrollToForm()" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-4 rounded-lg text-lg font-semibold border border-gray-700 transition flex items-center justify-center">
+                        <i class="fas fa-file-contract mr-2"></i> Request Assessment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- High-Revenue Live Traffic Hub (Maximum Ad Density) -->
+    <section class="px-4 sm:px-6 lg:px-8 py-16 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-12">
+                <h2 class="section-title text-white">Live Pakistan Traffic Safety Hub</h2>
+                <p class="section-subtitle">Real-time Safe City surveillance feeds integrated with Protection One's emergency response network</p>
+            </div>
+
+            <!-- City Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-gray-800 pb-4">
+                <button onclick="switchCity('karachi')" class="city-tab tab-button active" data-city="karachi">
+                    <i class="fas fa-city mr-2"></i> Karachi
+                </button>
+                <button onclick="switchCity('lahore')" class="city-tab tab-button" data-city="lahore">
+                    <i class="fas fa-city mr-2"></i> Lahore
+                </button>
+                <button onclick="switchCity('islamabad')" class="city-tab tab-button" data-city="islamabad">
+                    <i class="fas fa-city mr-2"></i> Islamabad
+                </button>
+                <button onclick="switchCity('rawalpindi')" class="city-tab tab-button" data-city="rawalpindi">
+                    <i class="fas fa-city mr-2"></i> Rawalpindi
+                </button>
+            </div>
+
+            <!-- Traffic Hub Grid (3-Column Layout with Ad Placements) -->
+            <div class="grid grid-cols-12 gap-6 mb-8">
+                <!-- LEFT SIDEBAR: Skyscraper Ad + Transit Tickers -->
+                <div class="col-span-12 md:col-span-2">
+                    <!-- Skyscraper Ad Placeholder -->
+                    <div class="ad-placeholder h-96 mb-6 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-red-500 text-xs font-bold mb-1">📺 AD</div>
+                            <div class="text-xs">Skyscraper<br>[160x600]</div>
+                        </div>
+                    </div>
+
+                    <!-- Transit Ticker -->
+                    <div>
+                        <h3 class="text-sm font-bold text-white mb-3 flex items-center">
+                            <i class="fas fa-rss-square brand-color mr-2"></i> Live Updates
+                        </h3>
+                        <div id="tickerContainer">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER COLUMN: Video Player + In-Article Ad -->
+                <div class="col-span-12 md:col-span-7">
+                    <!-- Live Video Player Mock -->
+                    <div class="video-player-mock mb-6">
+                        <div class="player-location-tag" id="locationTag">
+                            <i class="fas fa-map-marker-alt mr-2"></i> Shahrah-e-Faisal - Regent Plaza
+                        </div>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-20">
+                            <div class="mb-4">
+                                <span class="live-badge">
+                                    LIVE BROADCAST
+                                </span>
+                            </div>
+                            <i class="fas fa-video text-5xl text-gray-600"></i>
+                            <p class="text-gray-500 font-semibold mt-4" id="videoTitle">Safe City Live Feed - Karachi Metropolitan Area</p>
+                        </div>
+                        <div class="player-controls">
+                            <button class="control-btn" title="Play">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="control-btn" title="Pause">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="control-btn" title="Fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- In-Article Ad Placeholder -->
+                    <div class="ad-placeholder h-64 mb-6 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="text-red-500 text-xs font-bold mb-1">📺 GOOGLE ADSENSE</div>
+                            <div class="text-xs">In-Article Ad<br>[300x250]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR: Large Rectangle Ad + Sponsorship -->
+                <div class="col-span-12 md:col-span-3">
+                    <div class="ad-placeholder h-72 flex items-center justify-center mb-6">
+                        <div class="text-center">
+                            <div class="text-red-500 text-xs font-bold mb-1">📺 AD</div>
+                            <div class="text-xs">Large Rectangle<br>[336x280]</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-4 rounded-lg border border-gray-700">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Premium Sponsor</h4>
+                        <div class="h-20 bg-gray-700 rounded flex items-center justify-center text-gray-500 text-xs font-semibold">
+                            Local Business Logo
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Text Summary (Google AdSense Compliance) -->
+            <div class="seo-content">
+                <div class="location-indicator">
+                    <i class="fas fa-map-pin"></i>
+                    <span id="seoLocation">Karachi, Sindh</span>
+                </div>
+                <p id="seoText">
+                    Live traffic conditions in Karachi show moderate flow across major arteries including Shahrah-e-Faisal, M.A. Jinnah Road, and the Defence neighbourhood. Peak hours typically occur between 7-9 AM and 5-7 PM, with congestion concentrated near Saddar, the Port Authority area, and university routes. <strong>Protection One's integrated surveillance network</strong> monitors these corridors in real-time, providing instant alerts to our emergency response teams and corporate clients requiring secure transit through the city. Our NADRA-verified guards coordinate with Safe City cameras to ensure executive protection details navigate Karachi's complex traffic patterns with minimal exposure.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Ads High-Conversion Lead Capture Form -->
+    <section id="contact" class="px-4 sm:px-6 lg:px-8 py-20 bg-gradient-to-b from-gray-900 to-gray-950 border-b border-gray-800">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="section-title text-white">Free Comprehensive Security Assessment</h2>
+                <p class="section-subtitle">Expert evaluation of your facility, personnel, and unique threat landscape—zero obligation.</p>
+            </div>
+
+            <form id="leadForm" class="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-lg p-8 space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Full Name *</label>
+                        <input type="text" placeholder="Your Full Name" required class="form-input w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Company Name *</label>
+                        <input type="text" placeholder="Organization Name" required class="form-input w-full">
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Phone Number *</label>
+                        <input type="tel" placeholder="+92 300 XXX XXXX" required class="form-input w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">City *</label>
+                        <select required class="form-input w-full">
+                            <option value="" class="bg-gray-900">Select Your City</option>
+                            <option value="karachi" class="bg-gray-900">Karachi</option>
+                            <option value="lahore" class="bg-gray-900">Lahore</option>
+                            <option value="islamabad" class="bg-gray-900">Islamabad</option>
+                            <option value="rawalpindi" class="bg-gray-900">Rawalpindi</option>
+                            <option value="other" class="bg-gray-900">Other / Nationwide</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Service Type *</label>
+                    <select required class="form-input w-full">
+                        <option value="" class="bg-gray-900">Select Required Service</option>
+                        <option value="armed" class="bg-gray-900">Armed Static Guarding</option>
+                        <option value="surveillance" class="bg-gray-900">Smart Surveillance Systems</option>
+                        <option value="executive" class="bg-gray-900">Executive Protection</option>
+                        <option value="risk" class="bg-gray-900">Corporate Risk Assessment</option>
+                        <option value="cyber" class="bg-gray-900">Cyber & Access Control</option>
+                        <option value="consultation" class="bg-gray-900">Other / Consultation</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-300 mb-2">Tell Us About Your Needs (Optional)</label>
+                    <textarea placeholder="Brief description of your security requirements..." rows="4" class="form-input w-full resize-none"></textarea>
+                </div>
+
+                <div class="flex items-start">
+                    <input type="checkbox" required id="consent" class="w-4 h-4 mt-1 mr-3 cursor-pointer">
+                    <label for="consent" class="text-sm text-gray-400 cursor-pointer">
+                        I consent to Protection One contacting me with a customized security proposal. I understand this is a preliminary consultation with no financial obligation.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary w-full py-4 rounded-lg text-lg font-bold flex items-center justify-center gap-2 hover:shadow-2xl">
+                    <i class="fas fa-shield-alt"></i> Get My Free Assessment
+                </button>
+
+                <p class="text-xs text-gray-500 text-center">
+                    Your information is encrypted and secure. Protection One respects your privacy and will only contact you regarding your security needs.
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Core Services Matrix (SEO & Google AdSense Compliance) -->
+    <section class="px-4 sm:px-6 lg:px-8 py-20 border-b border-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-white">Protection One's Comprehensive Security Suite</h2>
+                <p class="section-subtitle">Industry-leading solutions deployed across corporate, governmental, and high-net-worth residential sectors throughout Pakistan</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1: Armed Static Guarding -->
+                <div class="service-card">
+                    <div class="text-4xl brand-color mb-4">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Armed Static Guarding</h3>
+                    <p class="text-gray-400 mb-4">
+                        NADRA-vetted, firearms-trained security personnel providing round-the-clock protection for corporate offices, factories, warehouses, and retail establishments nationwide.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><span class="brand-color font-bold">✓</span> Ex-military & law enforcement trained</li>
+                        <li><span class="brand-color font-bold">✓</span> Biometric attendance & GPS tracking</li>
+                        <li><span class="brand-color font-bold">✓</span> Daily incident reporting & escalation protocols</li>
+                        <li><span class="brand-color font-bold">✓</span> Firearms certification & ammunition management</li>
+                    </ul>
+                </div>
+
+                <!-- Service 2: Smart Surveillance Systems -->
+                <div class="service-card">
+                    <div class="text-4xl brand-color mb-4">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Smart Surveillance Systems</h3>
+                    <p class="text-gray-400 mb-4">
+                        AI-powered CCTV networks with thermal imaging, predictive threat detection, and cloud-based analytics providing 24/7 monitoring and instant threat response.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><span class="brand-color font-bold">✓</span> 4K & thermal imaging with edge AI processing</li>
+                        <li><span class="brand-color font-bold">✓</span> Perimeter intrusion detection & anomaly alerts</li>
+                        <li><span class="brand-color font-bold">✓</span> Cloud archival with 90-day backup & forensic retrieval</li>
+                        <li><span class="brand-color font-bold">✓</span> Mobile app access for authorized personnel</li>
+                    </ul>
+                </div>
+
+                <!-- Service 3: Executive Protection -->
+                <div class="service-card">
+                    <div class="text-4xl brand-color mb-4">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Executive Protection Details</h3>
+                    <p class="text-gray-400 mb-4">
+                        Discreet, elite close protection teams specialized in dignitary movements, high-risk travel, and sensitive corporate assignments requiring advanced threat assessment.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><span class="brand-color font-bold">✓</span> Advanced counter-surveillance & route planning</li>
+                        <li><span class="brand-color font-bold">✓</span> Protective Intelligence & security briefings</li>
+                        <li><span class="brand-color font-bold">✓</span> Armed & unarmed protection options</li>
+                        <li><span class="brand-color font-bold">✓</span> 24/7 Command Center coordination</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Extended Corporate Profile Text -->
+            <div class="mt-12 bg-gray-900/30 border border-gray-800 rounded-lg p-8">
+                <h4 class="text-lg font-bold text-white mb-4">Why Pakistan's Leading Organizations Trust Protection One</h4>
+                <p class="text-gray-400 leading-relaxed mb-4">
+                    <strong>Protection One Pakistan</strong> stands as the nation's premier provider of enterprise-grade security solutions, serving over 500 corporate clients, government agencies, and high-net-worth individuals across Karachi, Lahore, Islamabad, and Rawalpindi. Our NADRA-cleared, biometric-verified personnel are deployed with direct accountability to our 24/7 operations control room, ensuring real-time response to emerging threats.
+                </p>
+                <p class="text-gray-400 leading-relaxed mb-4">
+                    Our integrated surveillance networks leverage Safe City infrastructure partnerships and proprietary threat-detection AI to deliver predictive security intelligence rather than reactive incident response. Every deployment—from static guarding to executive close protection—is supported by ex-military command staff, threat assessment specialists, and incident commanders trained under international best practices.
+                </p>
+                <p class="text-gray-400 leading-relaxed">
+                    Protection One's commitment to transparency includes daily security reports, compliance documentation, biometric verification audits, and direct escalation pathways to senior management. We are ISO 9001:2015 certified and maintain insurance compliance across all personnel deployments, ensuring your organization operates with minimal liability exposure.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky Footer with Final CTA -->
+    <footer class="sticky-footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <div>
+                    <p class="text-sm font-semibold text-white mb-1">24/7 Emergency Response</p>
+                    <p class="text-xs text-gray-500">Covering Karachi, Lahore, Islamabad & Rawalpindi</p>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <a href="https://facebook.com/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://instagram.com/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/protectiononepk" target="_blank" class="text-gray-400 hover:brand-color transition text-lg">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 justify-end">
+                    <a href="tel:+923001234567" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fas fa-phone"></i> Emergency: +92 300 123 4567
+                    </a>
+                    <button onclick="scrollToForm()" class="btn-primary px-4 py-2 rounded text-sm font-semibold flex items-center justify-center gap-2">
+                        <i class="fas fa-shield-alt"></i> Get Quote
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Footer Section -->
+    <div class="bg-gray-950 border-t border-gray-800 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-shield-alt brand-color"></i> PROTECTION ONE
+                    </h4>
+                    <p class="text-xs text-gray-500 leading-relaxed">
+                        Enterprise security solutions protecting Pakistan's most valued organizations since 2009.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm">Services</h4>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li><a href="#" class="hover:brand-color transition">Armed Guarding</a></li>
+                        <li><a href="#" class="hover:brand-color transition">Surveillance Systems</a></li>
+                        <li><a href="#" class="hover:brand-color transition">Executive Protection</a></li>
+                        <li><a href="#" class="hover:brand-color transition">Risk Assessment</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm">Coverage Areas</h4>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li>Karachi Metropolitan Area</li>
+                        <li>Lahore & Punjab Region</li>
+                        <li>Islamabad & Rawalpindi</li>
+                        <li>Nationwide Consultation</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4 text-sm">Contact & Legal</h4>
+                    <ul class="space-y-2 text-xs text-gray-500">
+                        <li><a href="tel:+923001234567" class="hover:brand-color transition">+92 300 123 4567</a></li>
+                        <li><a href="mailto:info@protectiononepk.com" class="hover:brand-color transition">info@protectiononepk.com</a></li>
+                        <li><a href="#" class="hover:brand-color transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:brand-color transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 text-center">
+                <p class="text-xs text-gray-600">
+                    © 2024 Protection One Pakistan. All rights reserved. | ISO 9001:2015 Certified | NADRA Vetted | Police Approved
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactive Features -->
+    <script>
+        const cityData = {
+            karachi: {
+                title: 'Safe City Live Feed - Karachi Metropolitan Area',
+                location: 'Shahrah-e-Faisal - Regent Plaza',
+                locationCity: 'Karachi, Sindh',
+                tickers: [
+                    { icon: '⚠️', title: 'Heavy Traffic - GT Road', desc: 'Congestion from Karachi Port Trust to Clifton Bridge. 25-30 min delays. Avoid peak hours 7-9 AM & 5-7 PM.' },
+                    { icon: '🚨', title: 'Accident Alert - M.A. Jinnah Road', desc: 'Minor collision near Saddar. Traffic diverted. Expected clearance in 15 minutes. Use Zamzama/Defence alternate.' },
+                    { icon: '✅', title: 'Clear - Defence Area', desc: 'All routes operational. Smooth flow through DHA Phase 5-7 and Bakhtabad. Security checkpoints active.' }
+                ],
+                seo: 'Live traffic conditions in Karachi show moderate flow across major arteries including Shahrah-e-Faisal, M.A. Jinnah Road, and the Defence neighbourhood. Peak hours typically occur between 7-9 AM and 5-7 PM, with congestion concentrated near Saddar, the Port Authority area, and university routes. <strong>Protection One\'s integrated surveillance network</strong> monitors these corridors in real-time, providing instant alerts to our emergency response teams and corporate clients requiring secure transit through the city. Our NADRA-verified guards coordinate with Safe City cameras to ensure executive protection details navigate Karachi\'s complex traffic patterns with minimal exposure.'
+            },
+            lahore: {
+                title: 'Safe City Live Feed - Lahore Metropolitan Area',
+                location: 'Canal Road - Data Gunj Baksh',
+                locationCity: 'Lahore, Punjab',
+                tickers: [
+                    { icon: '⚠️', title: 'Traffic Build-up - Canal Road', desc: 'Moderate congestion near Thokar Niaz Baig. Alternate via Mall Road recommended. 15 min delays. School traffic active.' },
+                    { icon: '✅', title: 'Clear - Gulberg Area', desc: 'All main routes open. Smooth flow through G.O.R Park and Racecourse. Shopping district open with normal traffic.' },
+                    { icon: '🚨', title: 'Speed Enforcement - Mall Road', desc: 'Enhanced traffic monitoring near Fortress Stadium. Follow speed limits. Police presence active.' }
+                ],
+                seo: 'In Lahore, traffic patterns show dynamic flow across Canal Road, Mall Road, and the Racecourse corridor during daylight hours. The city\'s commercial heart experiences peak congestion between 10 AM-12 PM and 4-6 PM, particularly around Gulberg, Racecourse, and Liberty Market areas. <strong>Protection One\'s Lahore command center</strong> coordinates with local law enforcement and Safe City infrastructure to provide real-time security updates for executive movements, corporate facility protection, and static guarding assignments. Our biometric-verified personnel maintain constant vigilance across high-risk corridors, ensuring safe passage for VIP clients and secure logistics operations.'
+            },
+            islamabad: {
+                title: 'Safe City Live Feed - Islamabad Metropolitan Area',
+                location: 'Margalla Avenue - Blue Area',
+                locationCity: 'Islamabad, Federal Capital',
+                tickers: [
+                    { icon: '✅', title: 'Clear - Capital Expressway', desc: 'All lanes operational. Smooth traffic flow through G-9 and G-10 sectors. Highway clear towards Rawalpindi.' },
+                    { icon: '⚠️', title: 'Light Traffic - Margalla Avenue', desc: 'Minor congestion near Blue Area. Proceed with caution. 10 min delays expected. Bank Plaza area busy.' },
+                    { icon: '✅', title: 'Clear - Faisal Avenue', desc: 'Green light status for all major intersections. Perfect commute conditions. All government routes operational.' }
+                ],
+                seo: 'Islamabad\'s traffic landscape reflects the capital\'s structured grid system with relatively smooth flow across the Capital Expressway, Faisal Avenue, and Margalla Avenue during most hours. Government and corporate sector traffic concentrates around the Blue Area, G-5, and downtown corridors between 8-10 AM and 4-5 PM. <strong>Protection One\'s Islamabad operations</strong> specialize in dignitary protection, government facility security, and elite executive close protection services. Our command center maintains direct communication with Islamabad Traffic Police and coordinates seamlessly with diplomatic security protocols for sensitive assignments.'
+            },
+            rawalpindi: {
+                title: 'Safe City Live Feed - Rawalpindi Metropolitan Area',
+                location: 'Benazir Road - Downtown',
+                locationCity: 'Rawalpindi, Punjab',
+                tickers: [
+                    { icon: '⚠️', title: 'Moderate Traffic - Benazir Road', desc: 'Peak hour congestion near army headquarters. Alternative routes active. 20 min delays expected. Military convoy protocol.' },
+                    { icon: '✅', title: 'Clear - Liaquat Road', desc: 'All lanes open. Smooth flow through Rajah Bazaar and downtown areas. Market district accessible.' },
+                    { icon: '🚨', title: 'Alert - Convention Drive', desc: 'Event traffic management in effect. Plan your route accordingly. Security checkpoints active on major intersections.' }
+                ],
+                seo: 'Rawalpindi\'s traffic dynamics are influenced by military presence and government installations, with primary congestion points along Benazir Road, Liaquat Road, and Convention Drive during peak hours (7-9 AM, 4-7 PM). The city serves as a critical logistics hub and military garrison town, requiring specialized security protocols. <strong>Protection One\'s Rawalpindi division</strong> provides armed static guarding for sensitive installations, executive protection for military-linked corporate clients, and specialized surveillance systems for high-security compounds. Our personnel undergo additional vetting for coordination with military-affiliated security frameworks.'
+            }
+        };
+
+        function switchCity(city) {
+            // Update active tab
+            document.querySelectorAll('.city-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-city="${city}"]`).classList.add('active');
+
+            // Update video title
+            document.getElementById('videoTitle').textContent = cityData[city].title;
+            document.getElementById('locationTag').innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i> ${cityData[city].location}`;
+
+            // Update tickers
+            const tickerContainer = document.getElementById('tickerContainer');
+            tickerContainer.innerHTML = cityData[city].tickers.map(ticker => `
+                <div class="traffic-ticker">
+                    <strong>${ticker.icon} ${ticker.title}</strong><br>
+                    <span>${ticker.desc}</span>
+                </div>
+            `).join('');
+
+            // Update SEO content
+            document.getElementById('seoLocation').textContent = cityData[city].locationCity;
+            document.getElementById('seoText').innerHTML = cityData[city].seo;
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        function scrollToForm() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Form submission
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you! A Protection One security specialist will contact you within 2 hours. For emergencies, call +92 300 123 4567');
+            this.reset();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            switchCity('karachi');
+        });
+    </script>
+
+</body>
+</html>
